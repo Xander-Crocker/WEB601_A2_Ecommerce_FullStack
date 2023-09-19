@@ -38,4 +38,9 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
+// app listener
+app.listen(3000, function() {
+    console.log('Server running at http://localhost:3000');
+});
+
 module.exports = app;
