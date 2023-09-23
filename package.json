@@ -13,7 +13,9 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "http-errors": "~1.6.3",
-    "morgan": "~1.9.1"
+    "jquery": "^3.7.1",
+    "morgan": "~1.9.1",
+    "webkit": "^0.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
