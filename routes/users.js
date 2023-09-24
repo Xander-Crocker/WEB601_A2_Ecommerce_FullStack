@@ -56,7 +56,7 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
         // Check if email or username exists in the database
         const existingUser = await User.findOne({
             $or: [{ email }, { username }],
-        });        
+        });
         
         
         if (existingUser) {
@@ -107,36 +107,22 @@ router.delete('/user/delete/:username', async (req, res, next) =>{
     try {
         const {
             username,
-            email,
         } = req.params;
 
         // Check if email or username exists in the database
-        const existingUser = await User.findOne({
-            $or: [{ email }, { username }],
-        });
-        
-        //Check database for the user
+        const existingUser = await User.findOne({ username });
+
+        // Chech for user in the DB
         if (!existingUser) {
-            // No account found based on given parameters
-            const message = "User not found. Please try again"
-            return res.status(400).json({ error: message });
-        } else {
-            existingUser.findByIdAndDelete(User, async function(err, docs){
-                if (err){
-                    console.log(err)
-                } else {
-                    console.log("Deleted: ", docs)
-                }
-            });
+            return res.status(404).json({ error: `User ${username} not found.` });
         }
-
-        //Ask for password confirmation before deleting
-
-        //Logout user/Return to homepage as guest
+        
+        // Delete the user
+        await User.findOneAndDelete({ username });
 
         // Return a success response
-        return res.status(201).json({ message: 'User deleted successfully.' });
-                
+        return res.status(201).json({ message: `User ${username} deleted successfully.` });
+      
     } catch (error){
         // If there's an error, respond with a server error.
         return res.status(500).json({
