@@ -103,33 +103,72 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Delete User                           */
 /* -------------------------------------------------------------------------- */
-router.delete('/user/delete/:username', async (req, res, next) =>{
+router.delete('/user/delete/:id', async (req, res, next) =>{
     try {
         const {
-            username,
+            id,
         } = req.params;
 
         // Check if email or username exists in the database
-        const existingUser = await User.findOne({ username });
+        const existingUser = await User.findById(id);
 
-        // Chech for user in the DB
+        // Commented out for now as it interferes with postman testing.
+        // Chech for user in the database, if not found return an error code 404.
+        console.log(existingUser)
         if (!existingUser) {
-            return res.status(404).json({ error: `User ${username} not found.` });
+            return res.status(404).json({ error: `No user with that id could be found.` });
         }
         
         // Delete the user
-        await User.findOneAndDelete({ username });
+        await User.findOneAndDelete(id);
 
         // Return a success response
-        return res.status(201).json({ message: `User ${username} deleted successfully.` });
+        return res.status(201).json({ message: `User ${existingUser.username} deleted successfully.` });
       
     } catch (error){
         // If there's an error, respond with a server error.
+        console.log(error)
         return res.status(500).json({
             error: "Something went wrong on our end. Please try again. ",
         });
     }
 });
 
+/* -------------------------------------------------------------------------- */
+/*                          //SECTION - Log User In                           */
+/* -------------------------------------------------------------------------- */
+router.post('/user/login', async (req, res, next) => { 
+    try{
+        const {
+            username,
+            password
+        } = req.body;
+
+        // Find the user in the database based on username input
+        const user = await User.findOne({ username });
+
+        // If the user is not found, return an error code 404.
+        if (!user) {
+            return res.status(404).json({ error: 'Invalid username or password.' });
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const match = await bcrypt.compare(password, user.password);
+
+        // If the passwords don't match, return an error
+        if (!match) {
+            return res.status(404).json({ error: 'Invalid username or password.' });
+        }
+
+        // Return a success response
+        return res.status(200).json({ message: `User ${username} logged in successfully.` });
+
+    } catch (error) {
+        // If there's an error, respond with a server error.
+        return res.status(500).json({
+            error: "Something went wrong on our end. Please try again. ",
+        });
+    }
+});
 
 module.exports = router;
