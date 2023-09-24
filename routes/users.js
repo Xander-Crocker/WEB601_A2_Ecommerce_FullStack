@@ -103,15 +103,12 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Delete User                           */
 /* -------------------------------------------------------------------------- */
-router.delete('/user/delete/'.concat(username), async (req, res, next) =>{
+router.delete('/user/delete/:username', async (req, res, next) =>{
     try {
         const {
             username,
-            given_name,
-            family_name,
             email,
-            password
-        } = req.body;
+        } = req.params;
 
         // Check if email or username exists in the database
         const existingUser = await User.findOne({
