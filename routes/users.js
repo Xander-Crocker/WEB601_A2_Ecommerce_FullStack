@@ -100,7 +100,43 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
     };
 });
 
+/* -------------------------------------------------------------------------- */
+/*                          //SECTION - Delete User                           */
+/* -------------------------------------------------------------------------- */
+router.delete('/user/delete/'.concat(username), async (req, res, next) =>{
+    try {
+        const {
+            username,
+            email,
+        } = req.body;
 
+        // Check if email or username exists in the database
+        const existingUser = await User.findOne({
+            $or: [{ email }, { username }],
+        });
+        
+        //Check database for the user
+        if (!existingUser) {
+            // No account found based on given parameters
+            const message = "User not found. Please try again"
+            return res.status(400).json({ error: message });
+        } else {
+            existingUser.findByIdAndDelete(User, async function(err, docs){
+                if (err){
+                    console.log(err)
+                } else {
+                    console.log("Deleted: ", docs)
+                }
+            });
+        }
+                
+    } catch (error){
+        // If there's an error, respond with a server error.
+        return res.status(500).json({
+            error: "Something went wrong on our end. Please try again. ",
+        });
+    }
+});
 
 
 module.exports = router;
