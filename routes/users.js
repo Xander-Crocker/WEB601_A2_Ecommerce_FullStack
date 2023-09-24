@@ -37,8 +37,6 @@ router.get('/user/all', async (req, res, next) => {
     }
 });
 
-
-
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Register User                         */
 /* -------------------------------------------------------------------------- */
@@ -145,23 +143,24 @@ router.post('/user/login', async (req, res, next) => {
         } = req.body;
 
         // Find the user in the database based on username input
-        const user = await User.findOne({ username });
+        const existingUser = await User.findOne(username);
 
         // If the user is not found, return an error code 404.
-        if (!user) {
+        if (!existingUser) {
+            console.log(existingUser)
             return res.status(404).json({ error: 'Invalid username or password.' });
+        } else {
+            console.log(existingUser)
         }
 
         // Compare the provided password with the hashed password in the database
-        const match = await bcrypt.compare(password, user.password);
-
-        // If the passwords don't match, return an error
-        if (!match) {
-            return res.status(404).json({ error: 'Invalid username or password.' });
-        }
-
-        // Return a success response
-        return res.status(200).json({ message: `User ${username} logged in successfully.` });
+        const match = await bcrypt.compare(password, existingUser.password, function(err, result){
+            if(match){
+                return res.status(200).json({ message: `User ${username} logged in successfully.` });
+            } else {
+                return res.status(404).json({ error: 'Invalid username or password.' });
+            }
+        });
 
     } catch (error) {
         // If there's an error, respond with a server error.
