@@ -107,7 +107,10 @@ router.delete('/user/delete/'.concat(username), async (req, res, next) =>{
     try {
         const {
             username,
+            given_name,
+            family_name,
             email,
+            password
         } = req.body;
 
         // Check if email or username exists in the database
@@ -129,6 +132,13 @@ router.delete('/user/delete/'.concat(username), async (req, res, next) =>{
                 }
             });
         }
+
+        //Ask for password confirmation before deleting
+
+        //Logout user/Return to homepage as guest
+
+        // Return a success response
+        return res.status(201).json({ message: 'User deleted successfully.' });
                 
     } catch (error){
         // If there's an error, respond with a server error.
