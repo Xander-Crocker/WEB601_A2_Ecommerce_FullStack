@@ -20,10 +20,10 @@ const saltRounds = 10;
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Get all users                         */
 /* -------------------------------------------------------------------------- */
-router.get('/user/all', async (req, res, next) => {
+router.get('/user/all/:username', async (req, res, next) => {
     try {
         // Retrieve all users from the database.
-        let users = await User.find()
+        let users = await User.find({username: req.params.username})
 
         // If users evaluates to true then there are users.
         if (users) {
