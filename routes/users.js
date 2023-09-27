@@ -143,7 +143,7 @@ router.post('/user/login', async (req, res, next) => {
         } = req.body;
 
         // Find the user in the database based on username input
-        const existingUser = await User.findOne(username);
+        const existingUser = await User.findOne({username});
 
         // If the user is not found, return an error code 404.
         if (!existingUser) {
