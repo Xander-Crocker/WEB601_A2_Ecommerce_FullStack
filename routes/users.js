@@ -37,8 +37,6 @@ router.get('/user/all', async (req, res, next) => {
     }
 });
 
-
-
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Register User                         */
 /* -------------------------------------------------------------------------- */
@@ -56,7 +54,7 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
         // Check if email or username exists in the database
         const existingUser = await User.findOne({
             $or: [{ email }, { username }],
-        });        
+        });
         
         
         if (existingUser) {
@@ -103,49 +101,74 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Delete User                           */
 /* -------------------------------------------------------------------------- */
-router.delete('/user/delete/:username', async (req, res, next) =>{
+router.delete('/user/delete/:id', async (req, res, next) =>{
     try {
         const {
-            username,
-            email,
+            id,
         } = req.params;
 
         // Check if email or username exists in the database
-        const existingUser = await User.findOne({
-            $or: [{ email }, { username }],
-        });
-        
-        //Check database for the user
+        const existingUser = await User.findById(id);
+
+        // Commented out for now as it interferes with postman testing.
+        // Chech for user in the database, if not found return an error code 404.
+        console.log(existingUser)
         if (!existingUser) {
-            // No account found based on given parameters
-            const message = "User not found. Please try again"
-            return res.status(400).json({ error: message });
-        } else {
-            existingUser.findByIdAndDelete(User, async function(err, docs){
-                if (err){
-                    console.log(err)
-                } else {
-                    console.log("Deleted: ", docs)
-                }
-            });
+            return res.status(404).json({ error: `No user with that id could be found.` });
         }
-
-        //Ask for password confirmation before deleting
-
-        //Logout user/Return to homepage as guest
+        
+        // Delete the user
+        await User.findOneAndDelete(id);
 
         // Return a success response
-        return res.status(201).json({ message: 'User deleted successfully.' });
-                
+        return res.status(201).json({ message: `User ${existingUser.username} deleted successfully.` });
+      
     } catch (error){
         // If there's an error, respond with a server error.
+        console.log(error)
         return res.status(500).json({
             error: "Something went wrong on our end. Please try again. ",
         });
     }
 });
 
+
 /* -------------------------------------------------------------------------- */
+/*                          //SECTION - Log User In                           */
+/* -------------------------------------------------------------------------- */
+router.post('/user/login', async (req, res, next) => { 
+    try{
+        const {
+            username,
+            password
+        } = req.body;
+
+        // Find the user in the database based on username input
+        const existingUser = await User.findOne({username});
+
+        // If the user is not found, return an error code 404.
+        if (!existingUser) {
+            console.log(existingUser)
+            return res.status(404).json({ error: 'Invalid username or password.' });
+        }
+
+        // Compare the provided password with the hashed password in the database
+        const match = await bcrypt.compare(password, existingUser.password, function(err, result){
+            if(match){
+                return res.status(200).json({ message: `User ${username} logged in successfully.` });
+            } else {
+                return res.status(404).json({ error: 'Invalid username or password.' });
+            }
+        });
+
+    } catch (error) {
+        // If there's an error, respond with a server error.
+        return res.status(500).json({
+            error: "Something went wrong on our end. Please try again. ",
+        });
+
+      
+      
 /*                         //SECTION - Update user                         */
 /* -------------------------------------------------------------------------- */
 
@@ -181,6 +204,7 @@ router.put('/user/update/:id', async (req, res) => {
     } catch (error) {
         // If there's an error, respond with an error message
         return res.status(500).send({ error: 'Something went wrong. Please try again.' });
+
     }
 });
 
