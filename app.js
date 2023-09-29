@@ -8,8 +8,8 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const viewRouter = require('./routes/index');
+const userRouter = require('./routes/user/');
 
 const mongoUri = process.env.MONGODB_URI;
 
@@ -53,8 +53,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/api', usersRouter);
+app.use('/', viewRouter);
+app.use('/api/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,7 +1,7 @@
 const { body, validationResult } = require('express-validator');
 
 // Express-validator middleware chain for validating and sanitizing register inputs
-const registerUserValidation = [
+const validateRegister = [
     body('username')
         .notEmpty()
         .trim()
@@ -18,6 +18,7 @@ const registerUserValidation = [
         .escape(),
 
     body('email')
+        .notEmpty()
         .isEmail()
         .normalizeEmail(),
 
@@ -26,6 +27,29 @@ const registerUserValidation = [
         .trim()
         .escape(),
 ];
+
+
+const validateUpdate = [
+    body('password')
+        .notEmpty()
+        .trim()
+        .escape()
+];
+
+
+const validateLogin = [
+    body('username')
+        .notEmpty()
+        .trim()
+        .escape(),
+
+    body('password')
+        .notEmpty()
+        .trim()
+        .escape()
+];
+
+
 
 // Middleware function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -39,6 +63,8 @@ const handleValidationErrors = (req, res, next) => {
 
 // add any validators that need exporting
 module.exports = {
-    registerUserValidation,
+    validateRegister,
+    validateUpdate,
+    validateLogin,
     handleValidationErrors,
 };
