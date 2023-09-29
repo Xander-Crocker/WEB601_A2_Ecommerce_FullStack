@@ -1,13 +1,47 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+require('dotenv').config()
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 
-var app = express();
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+
+const mongoUri = process.env.MONGODB_URI;
+
+const app = express();
+
+const store = new MongoDBStore({
+    uri: mongoUri,
+    collection: 'sessions',
+    expires: 1000 * 60 * 60 * 72, // Session data will be stored for 3 days
+});
+  
+store.on('error', (err) => {
+    console.error('MongoDB Session Store Error:', err);
+});
+
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: store,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 72, // Session cookie will expire in 3 days
+        },
+    })
+);
+
+
+
+
+
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +60,8 @@ app.use('/api', usersRouter);
 app.use(function(req, res, next) {
     next(createError(404));
 });
+
+
 
 // error handler
 app.use(function(err, req, res, next) {

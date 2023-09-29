@@ -2,6 +2,11 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const passport = require('passport');
+const JwtStrategy = require('passport-jwt').Strategy,
+      ExtractJwt = require('passport-jwt').ExtractJwt;
 
 
 //SETUP - Import Models
@@ -20,18 +25,44 @@ const saltRounds = 10;
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - Get all users                         */
 /* -------------------------------------------------------------------------- */
-router.get('/user/all/:username', async (req, res, next) => {
+router.get('/user/all', async (req, res, next) => {
     try {
         // Retrieve all users from the database.
-        let users = await User.find({username: req.params.username})
+        let users = await User.find()
 
         // If users evaluates to true then there are users.
         if (users) {
             return res.status(200).json(users);
         } else {
-            return res.status(404).json({ error: "Not found. No users exist."});
+            return res.status(404).json({ error: "No users exist."});
         }
     } catch (error) {
+        // If there's an error, respond with a server error.
+        return res.status(500).json({ error: "Something went wrong on our end. Please try again. "});
+    }
+});
+
+/* -------------------------------------------------------------------------- */
+/*                          //SECTION - Get one user                          */
+/* -------------------------------------------------------------------------- */
+router.get('/user/one/:id', async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        if (id == ':id') {
+            return res.status(400).json({ error: "No user ID provided."});
+        }
+        console.log(id);
+        // Retrieve all users from the database.
+        let user = await User.findById(id)
+
+        // If users evaluates to true then there are users. 
+        if (user) {
+            return res.status(200).json(user);
+        } else {
+            return res.status(404).json({ error: "No user with provided ID exists."});
+        }
+    } catch (error) {
+        console.log(error);
         // If there's an error, respond with a server error.
         return res.status(500).json({ error: "Something went wrong on our end. Please try again. "});
     }
@@ -68,7 +99,7 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
 
 
         // Hash and salt the password, then store to database.
-        await bcrypt.hash(password, saltRounds, async function(err, hash) {
+        bcrypt.hash(password, saltRounds, async function(err, hash) {
             //TODO Return an api error.
             if (err) {
                 console.log(err);
@@ -80,7 +111,8 @@ router.post('/user/register', registerUserValidation, handleValidationErrors, as
                 given_name,
                 family_name,
                 email,
-                password: hash
+                password: hash,
+                role: 'customer'
             });
     
             // Save the user document to the database
@@ -107,6 +139,9 @@ router.delete('/user/delete/:id', async (req, res, next) =>{
             id,
         } = req.params;
 
+        if (id == ':id') {
+            return res.status(400).json({ error: "No user ID provided."});
+        }
         // Check if email or username exists in the database
         const existingUser = await User.findById(id);
 
@@ -121,8 +156,8 @@ router.delete('/user/delete/:id', async (req, res, next) =>{
         await User.findOneAndDelete(id);
 
         // Return a success response
-        return res.status(201).json({ message: `User ${existingUser.username} deleted successfully.` });
-      
+        return res.status(200).json({ message: `User ${existingUser.username} deleted successfully.` });
+
     } catch (error){
         // If there's an error, respond with a server error.
         console.log(error)
@@ -134,7 +169,7 @@ router.delete('/user/delete/:id', async (req, res, next) =>{
 
 
 /* -------------------------------------------------------------------------- */
-/*                          //SECTION - Log User In                           */
+/*                          //SECTION - LogIn                                 */
 /* -------------------------------------------------------------------------- */
 router.post('/user/login', async (req, res, next) => { 
     try{
@@ -144,42 +179,70 @@ router.post('/user/login', async (req, res, next) => {
         } = req.body;
 
         // Find the user in the database based on username input
-        const existingUser = await User.findOne({username});
+        const user = await User.findOne({username: username});
 
         // If the user is not found, return an error code 404.
-        if (!existingUser) {
-            console.log(existingUser)
+        if (user) {
+            
+            // Compare the provided password with the hashed password in the database
+            bcrypt.compare(password, user.password, function(err, result){
+                if (err) {
+                    console.log(err);
+                }
+
+                if(result){
+                    // Create a session for the user upon successful login                    
+                    req.session.user = { _id: user._id.toString(), role: user.role };
+
+                    
+                    return res.status(200).json({
+                        message: `User ${username} logged in successfully.`
+                    });
+                } else {
+                    return res.status(404).json({ error: 'Invalid username or password.' });
+                }
+
+
+            });
+
+        } else {
             return res.status(404).json({ error: 'Invalid username or password.' });
         }
-
-        // Compare the provided password with the hashed password in the database
-        const match = await bcrypt.compare(password, existingUser.password, function(err, result){
-            if(match){
-                return res.status(200).json({ message: `User ${username} logged in successfully.` });
-            } else {
-                return res.status(404).json({ error: 'Invalid username or password.' });
-            }
-        });
-
     } catch (error) {
         // If there's an error, respond with a server error.
         return res.status(500).json({
             error: "Something went wrong on our end. Please try again. ",
         });
-
+}});
       
-      
-/*                         //SECTION - Update user                         */
+  
+/* -------------------------------------------------------------------------- */    
+/*                         //SECTION - Update user                            */
 /* -------------------------------------------------------------------------- */
 
-router.put('/user/update/:id', async (req, res) => {
+router.put('/user/update/:id',  async (req, res) => {
     try {
         const {
             password
         } = req.body;
+        
+        const {id} = req.params;
+        if (id == ':id') {
+            return res.status(400).json({ error: "No user ID provided."});
+        }
 
+        if (!req.session) {
+            if (req.session.user.role !== 'admin' && id !== req.session.user._id.toString()) {
+                // Check if the user is authorized to perform this action
+                return res.status(400).send({
+                    message: 'You are not authorized to perform this action.',
+                });
+            }
+        }
+
+        
         // Hash and salt the password, then store in database.
-        await bcrypt.hash(password, saltRounds, async function(err, hash) {
+        bcrypt.hash(password, saltRounds, async function(err, hash) {
             if (err) {
                 console.log(err);
             }
@@ -190,12 +253,12 @@ router.put('/user/update/:id', async (req, res) => {
                 if (result.matchedCount = 0) {
                     return res.status(404).send({
                         message: 'Document not found.'
-                        });
+                    });
                 } else if (result.modifiedCount = 0) {
                     return res.status(500).send({ error: 'Document found, but could not be updated.' });
                 } else {
                     return res.status(201).send({
-                    message: 'User password changed successfully.'
+                        message: 'User password changed successfully.'
                     });
                 }
         });
@@ -203,8 +266,29 @@ router.put('/user/update/:id', async (req, res) => {
 
     } catch (error) {
         // If there's an error, respond with an error message
+        console.log(error);
         return res.status(500).send({ error: 'Something went wrong. Please try again.' });
 
+    }
+});
+
+/* -------------------------------------------------------------------------- */
+/*                             //SECTION - Logout                             */
+/* -------------------------------------------------------------------------- */
+router.get('/user/logout', (req, res) => {
+    try {
+        // Clear the user's session
+        req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Logout failed.' });
+        } else {
+            return res.status(200).json({ message: 'Logout successful.' });
+        }
+        });
+    } catch (error) {
+        // If there's an error, respond with a server error.
+        console.error('Logout error:', error);
+        return res.status(500).json({ error: 'Something went wrong on our end. Please try again.' });
     }
 });
 
