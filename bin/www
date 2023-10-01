@@ -18,6 +18,7 @@ const certificatePath = path.join(__dirname, '..', 'certificates', 'cert.pem');
 const options = {
     key: fs.readFileSync(privateKeyPath),
     cert: fs.readFileSync(certificatePath),
+    secureProtocol: 'TLSv1_2_method',
   };
 
 /**
