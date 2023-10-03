@@ -38,12 +38,12 @@ body{
 	padding: 10px 0;
 }
 .logo{
-	float:left;
-	margin-right: 46.5%;
+	float: left;
+	margin-right: 35%;
 }
 .cssmenu {
-	float:left;
-	margin-top:11px;
+	float: left;
+  margin-top: 3.5%;
 }
 .cssmenu ul li {
 	display: inline-block;
