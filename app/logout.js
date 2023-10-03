@@ -8,6 +8,6 @@ document.getElementById('logout').addEventListener('click', async() => {
 
     if (response.status === 200 && response.ok === true) {
         alert('Logout successful.')
-        window.location.replace('http://localhost:3000')
+        window.location.replace('http://localhost:443')
     }
 })

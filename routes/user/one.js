@@ -21,16 +21,19 @@ router.get('/one/:id', async (req, res, next) => {
         }
 
         // Ensure there is a valid session and the user is properly authorised.
-        if (req.session.user) {
-            if (req.session.user.role !== 'admin' && id !== req.session.user._id.toString()) {
-                return res.status(403).send({
-                    message: 'You are not authorized to perform this action.',
+        const originIsTrusted = process.env.TRUSTED_ORIGINS.includes(req.hostname) || process.env.TRUSTED_ORIGINS.includes(req.ip);
+        if (!originIsTrusted) {
+            if (req.session.user) {
+                if (req.session.user.role !== 'admin' && id !== req.session.user._id.toString()) {
+                    return res.status(403).send({
+                        message: 'You are not authorized to perform this action.',
+                    });
+                }
+            } else {
+                return res.status(401).send({
+                    message: 'You are currently not authenticated.',
                 });
             }
-        } else {
-            return res.status(401).send({
-                message: 'You are currently not authenticated.',
-            });
         }
         
         // Retrieve all users from the database.
