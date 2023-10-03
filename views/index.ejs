@@ -1,6 +1,5 @@
 <!DOCTYPE HTML>
 <html>
-
 	<head>
 		<title> WEB601 Ecommerce | Home</title>
 		<%- include('partials/head.ejs'); %>
@@ -12,10 +11,8 @@
 
 		<!-- ANCHOR feature product - large product details -->
 		<div class="index-banner">
-
 			<div class="wmuSlider example1" style="height: 570px;">
 				<div class="wmuSliderWrapper">
-
 					<article style="position: relative; width: 100%; opacity: 1;"> 
 						<div class="banner-wrap">
 							<div class="slider-left">
@@ -30,136 +27,37 @@
 							<div class="clear"></div>
 						</div>
 					</article>
-
 				</div>
 			</div>
 
 			<!-- ANCHOR Main Page Content - product grid -->
 			<div class="main">
 				<div class="wrap">
-
-						<!-- ANCHOR product list - product 1 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'Stay Wild',
-									subtitle: 'Mens Black',
-									imgsrc: 'product_Images/shirt2.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star1',
-									star5: 'rating-star',
-									
-								}) %>
-							</div>
-						</div>
-
-						<!-- ANCHOR product list - product 2 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'Coffee Classic',
-									subtitle: 'Mens White',
-									imgsrc: 'product_Images/shirt3.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star1',
-									star5: 'rating-star1',
-									
-								}) %>
-							</div>
-						</div>
-
-						<!-- ANCHOR product list - product 3 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'Lioness',
-									subtitle: 'Womens White',
-									imgsrc: 'product_Images/shirt4.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star1',
-									star5: 'rating-star',
-									
-								}) %>
-							</div>
-						</div>
-
-						<!-- ANCHOR product list - product 4 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'Skeleton Peace',
-									subtitle: 'Womens Black',
-									imgsrc: 'product_Images/shirt5.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star1',
-									star5: 'rating-star1',
-									
-								}) %>
-							</div>
-						</div>
-
-						<!-- ANCHOR product list - product 5 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'Bowie',
-									subtitle: 'Womens Black',
-									imgsrc: 'product_Images/shirt6.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star1',
-									star5: 'rating-star1',
-									
-								}) %>
-							</div>
-						</div>
-
-						<!-- ANCHOR product list - product 6 -->
-						<div class="content-bottom" ">
-							<div class="box1">
-								<%- include('partials/product.ejs', {
-									title: 'I want Pancakes',
-									subtitle: 'Womens Yellow',
-									imgsrc: 'product_Images/shirt7.jpg',
-									imgalt: 'shirt',
-									info: 'Shirt',
-									price: '$100',
-									star1: 'rating-star1',
-									star2: 'rating-star1',
-									star3: 'rating-star1',
-									star4: 'rating-star',
-									star5: 'rating-star',
-									
-								}) %>
-							</div>
-						</div>
-
+					<div class="inner_wrap">
+                        <% products.forEach(function(product){ %>
+                            <div class="content-bottom" ">
+                                <div class="box1">
+                                    <%- include('partials/product.ejs', {
+                                        title: product.title,
+                                        subtitle: product.tags.join(', '),
+                                        imgsrc: product.images[0].src,
+                                        imgalt: 'shirt',
+                                        info: 'Shirt',
+                                        price: Intl.NumberFormat('en-NZ', { style: 'currency', currency: 'NZD' }).format(product.variants[0].price / 100),
+                                        star1: 'rating-star1',
+                                        star2: 'rating-star1',
+                                        star3: 'rating-star1',
+                                        star4: 'rating-star1',
+                                        star5: 'rating-star',
+                                        rating: (4)
+                                    }) %>
+                                </div>
+                            </div>
+                        <% }); %>
+					</div>
 				</div>
-					<div class="clear"></div>
+
+                <div class="clear"></div>
 			</div>
 		</div>
 
