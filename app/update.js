@@ -2,13 +2,13 @@
 document.getElementById('update-password').addEventListener('click', async() => {
 
     // Get user info from db
-    const usernameId = document.getElementById('username-input').value;
+    const userId = document.getElementById('id-input').value;
     data = {
         password: document.getElementById('password-input').value
     }
 
     // Send put request to endpoint containing user data
-    const response = await fetch('/api/user/update/'.concat(usernameId), {
+    const response = await fetch('/api/user/update/'.concat(userId), {
         method: "PUT",
         mode: "cors",
         cache: "no-cache",
@@ -21,7 +21,7 @@ document.getElementById('update-password').addEventListener('click', async() => 
         body: JSON.stringify(data)
     });
     
-    if (response.status === 200 && response.ok === true) {
+    if (response.status === 201 && response.ok === true) {
         alert('Password changed successfully.')
         window.location.replace('http://localhost:443')
     }

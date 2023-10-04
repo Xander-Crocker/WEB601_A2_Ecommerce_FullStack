@@ -22,6 +22,11 @@
 											<h4 class="card-title">Account</h4>
 											<form class="my-login-validation" novalidate="">
 												<div class="profile-info">
+													<label for="id">ID:</label>
+													<input type="text" id="id-input" class="acc_input" value=<%- user._id %> disabled>
+												</div>
+
+												<div class="profile-info">
 													<label for="username">Username:</label>
 													<input type="text" id="username-input" class="acc_input" value=<%- user.username %> disabled>
 												</div>

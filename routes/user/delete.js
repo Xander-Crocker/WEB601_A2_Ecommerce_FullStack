@@ -44,7 +44,7 @@ router.delete('/delete/:id', async (req, res, next) =>{
         }
         
         // Delete the user
-        await User.findOneAndDelete(id);
+        await User.findByIdAndDelete(id);
 
         // Return a success response
         return res.status(200).json({ message: `User ${existingUser.username} deleted successfully.` });
