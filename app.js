@@ -21,7 +21,7 @@ const store = new MongoDBStore({
     collection: 'sessions',
     expires: 1000 * 60 * 60 * 72, // Session data will be stored for 3 days
 });
-  
+
 store.on('error', (err) => {
     console.error('MongoDB Session Store Error:', err);
 });
@@ -37,10 +37,6 @@ app.use(
         },
     })
 );
-
-
-
-
 
 
 

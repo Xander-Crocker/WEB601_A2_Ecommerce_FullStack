@@ -37,7 +37,7 @@ router.delete('/delete/:id', async (req, res, next) =>{
         const existingUser = await User.findById(id);
 
         // Commented out for now as it interferes with postman testing.
-        // Chech for user in the database, if not found return an error code 404.
+        // Check for user in the database, if not found return an error code 404.
         console.log(existingUser)
         if (!existingUser) {
             return res.status(404).json({ error: `No user with that id could be found.` });

@@ -14,7 +14,7 @@ const { validateUpdate, handleValidationErrors } = require('../../middlewares/va
 
 //SETUP - Configure Middlewares
 const saltRounds = 10;
-  
+
 
 /* -------------------------------------------------------------------------- */    
 /*                         //SECTION - Update user                            */
