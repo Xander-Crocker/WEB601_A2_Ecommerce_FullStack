@@ -38,6 +38,11 @@ app.use(
     })
 );
 
+// make session user available to ejs
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
+    next();
+});
 
 
 // view engine setup

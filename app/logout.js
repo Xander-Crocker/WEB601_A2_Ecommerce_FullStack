@@ -6,7 +6,7 @@ document.getElementById('logout-btn').addEventListener('click', async() => {
         method: "GET",
     });
 
-    if (response.status === 200 && response.ok === true) {
+    if (response.status === 200 && response.ok === true) { 
         alert('Logout successful.')
         window.location.replace('http://localhost:443')
     }

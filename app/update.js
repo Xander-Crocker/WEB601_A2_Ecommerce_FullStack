@@ -5,7 +5,7 @@ document.getElementById('update-password').addEventListener('click', async() => 
     const userId = document.getElementById('id-input').value;
     data = {
         password: document.getElementById('password-input').value
-    }
+    } 
 
     // Send put request to endpoint containing user data
     const response = await fetch('/api/user/update/'.concat(userId), {
