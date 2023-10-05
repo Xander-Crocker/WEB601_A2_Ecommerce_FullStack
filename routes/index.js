@@ -27,7 +27,8 @@ router.get('/account.ejs', async function(req, res, next) {
 /* GET product details page. */
 router.get('/product/:id', async function(req, res, next) {
     let product = await axios.get('http://localhost:443/api/product/one/'.concat(req.params.id));
-    res.render('product_details', { title: 'Product Details', product: product.data.data });
+    // console.log(product);
+    res.render('product_details', { title: 'Product Details', product: product.data });
 });
 
 /* GET billing page. */
