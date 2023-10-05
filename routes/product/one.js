@@ -11,11 +11,20 @@ const axiosRequest = axios.create({
         //'Content-Type': 'application/json', // Adjust the content type if needed
     },
 });
+
 /* -------------------------------------------------------------------------- */
-/*                        //SECTION - Get all products                        */
+/*                        //SECTION - Get one product                         */
 /* -------------------------------------------------------------------------- */
-router.get('/all', async (req, res, next) => {
+router.get('/one/:id', async (req, res, next) => {
     try {
+        // Extract data from the request parameters.
+        const {id} = req.params;
+
+        // Check that the URL params are provided.
+        if (id == ':id') {
+            return res.status(400).json({ error: "No product ID provided."});
+        }
+
         // Ensure there is a valid session and the user is properly authorised.
         const originIsTrusted = process.env.TRUSTED_ORIGINS.includes(req.hostname) || process.env.TRUSTED_ORIGINS.includes(req.ip);
         if (!originIsTrusted) {
@@ -31,18 +40,18 @@ router.get('/all', async (req, res, next) => {
                 });
             }
         }
-
         // Get shop id from .env
         const shop = process.env.SHOP_ID;
 
         // Retrieve all products from Printify.
-        let products = await axiosRequest.get(`/shops/${shop}/products.json`)
+        let product = await axiosRequest.get(`/shops/${shop}/products/${id}.json`)
 
-        // If users evaluates to true then there are users.
-        if (products.data) {
-            return res.status(200).json(products.data);
+
+        //FIXME - This will always eval to true since axios always returns a response object. 
+        if (product) {
+            return res.status(200).json(product.data);
         } else {
-            return res.status(404).json({ error: "No products founds."});
+            return res.status(404).json({ error: "No product with provided ID exists."});
         }
     } catch (error) {
         console.log(error) //TODO - Replace with an error logger.
