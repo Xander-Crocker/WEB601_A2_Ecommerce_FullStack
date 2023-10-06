@@ -1,41 +1,43 @@
 <!DOCTYPE HTML>
 <html>
-
 	<head>
 		<title> WEB601 Ecommerce | Product Details</title>
 		<%- include('partials/head.ejs'); %>
 	</head>
 
 	<body>
-        <%- include('partials/header.ejs'); %>
+		<%- include('partials/header.ejs'); %>
 		<%- include('partials/navigation.ejs'); %>
 
-            <!-- ANCHOR main content here -->
-			<div class="index-banner">
-				<div class="wmuSlider example1" style="height: 570px;">
-					<div class="wmuSliderWrapper">
-	
-						<article style="position: relative; width: 100%; opacity: 1;"> 
-							<div class="banner-wrap">
-								<div class="slider-left">
-									<img src="product_Images/shirt1.jpg" alt="shirt"/> 
-								</div>
-								<div class="slider-right">
-									<h1>Fears Kill Dreams</h1>
-									<h2>Black</h2>
-									<p>Custom Shirts Co.</p>
-									<div class="btn"><a href="">Buy Now</a></div>
-								</div>
-								<div class="clear"></div>
+		<!-- ANCHOR feature product - large product details -->
+		<div class="index-banner">
+			<div class="wmuSlider example1" style="height: 570px;">
+				<div class="wmuSliderWrapper">
+					<article style="position: relative; width: 100%; opacity: 1;"> 
+						<div class="banner-wrap">
+							<div class="slider-left">
+								<img src="/product_Images/shirt1.jpg" alt=""/> 
+								<!-- <img src="product.images[0].src" alt=""/>  -->
 							</div>
-						</article>
-	
-					</div>
+							<div class="slider-right">
+								<h1><%= product.title %></h1>
+								<p><%= product.description %></p>
+								<div class="btn">Add to Cart</a></div>
+							</div>
+							<div class="clear"></div>
+						</div>
+					</article>
 				</div>
+			</div>
 
-        <%- include('partials/navigation.ejs'); %>
+			<!-- ANCHOR Main Page Content - product grid -->
+			<div class="main">
+            </div>
+				
+		</div>
+
+		<%- include('partials/navigation.ejs'); %>
 		<%- include('partials/footer.ejs'); %>
 
 	</body>
-
 </html>

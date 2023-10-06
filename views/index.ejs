@@ -38,6 +38,7 @@
                             <div class="content-bottom" ">
                                 <div class="box1">
                                     <%- include('partials/product.ejs', {
+                                        id: product.id,
                                         title: product.title,
                                         subtitle: product.tags.join(', '),
                                         imgsrc: product.images[0].src,
