@@ -9,7 +9,7 @@ document.getElementById('delete-account').addEventListener('click', async() => {
         method: "DELETE",
     });    
 
-    if (response.status === 200 && response.ok === true) {
+    if (response.status === 200 && response.ok === true) { 
         console.log(response);
         alert('Account deleted successfully.')
         window.location.replace('http://localhost:443')
