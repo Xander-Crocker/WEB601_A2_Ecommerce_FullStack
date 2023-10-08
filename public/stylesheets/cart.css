@@ -1,4 +1,14 @@
-body {
+.payBtn {
+    border: 0px;
+    background-color: #000;
+    color: #fff;
+    /* background-color:#0085A1;  */
+    float: right; 
+    border-radius: 5px;
+}
+
+
+/* body {
     font-family: 'Manrope', sans-serif;
     background:#eee;
 }
@@ -38,4 +48,4 @@ body {
 
 .qty i {
     font-size: 11px;
-}
+} */

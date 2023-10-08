@@ -3,7 +3,7 @@
 	<head>
 		<title> WEB601 Ecommerse | Cart</title>
 		<%- include('partials/head.ejs'); %>
-		
+		<link rel="stylesheet" href="/public/stylesheets/cart.css">
 	</head>
 
 	<body>
@@ -34,7 +34,15 @@
 
 						<div class="card">
 							<div class="card-body">
-								<button type="button" class="btn btn-warning btn-block btn-lg" style="background-color:#0085A1; float: right; border-radius: 5px;">Proceed to Pay</button>
+								<button type="button" id="payBtn" class="payBtn" style="
+									text-decoration: none;
+									float: right;
+									border: 0px;
+									background-color: blue;
+									color: white;
+									border-radius: 5px;
+									padding: 10px;"
+								>Proceed to Pay</button>
 							</div>
 						</div>
 					
