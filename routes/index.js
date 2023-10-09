@@ -1,37 +1,45 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const axios = require('axios').default;
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+router.get('/', async function(req, res, next) {
+    let products = await axios.get('http://localhost:443/api/product/all');
+    res.render('index', { products: products.data.data });
+    console.log(req.session)
 });
+
 /* GET login page. */
-router.get('/login.ejs', function(req, res, next) {
-  res.render('login', { title: 'Login' });
+router.get('/login', function(req, res, next) {
+    res.render('login', { title: 'Login' });
 });
+
 /* GET sign up page. */
-router.get('/signup.ejs', function(req, res, next) {
-  res.render('signup', { title: 'Sign Up' });
+router.get('/signup', function(req, res, next) {
+    res.render('signup', { title: 'Sign Up' });
 });
+
 /* GET user account page. */
-router.get('/account.ejs', function(req, res, next) {
-  res.render('account', { title: 'Account' });
+router.get('/account', async function(req, res, next) {
+    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
+    res.render('account', { title: 'Account', user: user.data });
 });
+
 /* GET product details page. */
-router.get('/product_details.ejs', function(req, res, next) {
-  res.render('product_details', { title: 'Product Details' });
+router.get('/product/:id', async function(req, res, next) {
+    let product = await axios.get('http://localhost:443/api/product/one/'.concat(req.params.id));
+    // console.log(product);
+    res.render('product_details', { title: 'Product Details', product: product.data });
 });
+
 /* GET billing page. */
-router.get('/billing.ejs', function(req, res, next) {
-  res.render('billing', { title: 'Billing' });
+router.get('/cart', function(req, res, next) {
+    res.render('cart', { title: 'Cart' });
 });
-/* GET payment page. */
-router.get('/payment.ejs', function(req, res, next) {
-  res.render('payment', { title: 'Payment' });
-});
-/* GET confirmation page. */
-router.get('/confirmation.ejs', function(req, res, next) {
-  res.render('confirmation', { title: 'Confirmation' });
+
+/* GET success page. */
+router.get('/success', function(req, res, next) {
+    res.render('success', { title: 'Success' });
 });
 
 module.exports = router;
