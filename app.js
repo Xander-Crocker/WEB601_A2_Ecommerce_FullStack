@@ -10,6 +10,8 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 
 const viewRouter = require('./routes/index');
 const userRouter = require('./routes/user/');
+const productRouter = require('./routes/product');
+const webhookRouter = require('./routes/webhook');
 
 const mongoUri = process.env.MONGODB_URI;
 
@@ -20,7 +22,7 @@ const store = new MongoDBStore({
     collection: 'sessions',
     expires: 1000 * 60 * 60 * 72, // Session data will be stored for 3 days
 });
-  
+
 store.on('error', (err) => {
     console.error('MongoDB Session Store Error:', err);
 });
@@ -37,31 +39,39 @@ app.use(
     })
 );
 
-
-
-
-
+// make session user available to ejs
+app.use(function(req, res, next) {
+    res.locals.user = req.session.user;
+    next();
+});
 
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Moved above express.json() because request needs to be raw, not parsed.
+app.use('/', webhookRouter);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(express.static('public'));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'app')));
 
 app.use('/', viewRouter);
 app.use('/api/user', userRouter);
+app.use('/api/product', productRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
 });
 
-
+webhookRouter
 
 // error handler
 app.use(function(err, req, res, next) {

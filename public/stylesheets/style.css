@@ -38,12 +38,12 @@ body{
 	padding: 10px 0;
 }
 .logo{
-	float:left;
-	margin-right: 46.5%;
+	float: left;
+	margin-right: 35%;
 }
 .cssmenu {
-	float:left;
-	margin-top:11px;
+	float: left;
+  margin-top: 3.5%;
 }
 .cssmenu ul li {
 	display: inline-block;
@@ -1435,7 +1435,35 @@ h4.m_9{
 	background: #FFAF02;
 	border-bottom: 4px solid #DF9A06;
 }
+
+.add_to_cart_btn {
+	font-family: 'Open Sans', sans-serif;
+	cursor: pointer;
+	border: none;
+	outline: none;
+	display: inline-block;
+	font-size:0.85em;
+	padding: 10px 34px;
+	background:#555;
+	border-bottom: 4px solid #1D1C1C;
+	color: #FFF;
+	text-transform: uppercase;
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+.add_to_cart_btn:hover{
+	background: #FFAF02;
+	border-bottom: 4px solid #DF9A06;
+}
+
+
 ul.add-to-links{
+	padding: 4% 0;
+}
+
+ul.add-to-links li{
 	margin-bottom:2%;
 }
 ul.add-to-links img{

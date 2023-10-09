@@ -14,7 +14,7 @@ const { validateUpdate, handleValidationErrors } = require('../../middlewares/va
 
 //SETUP - Configure Middlewares
 const saltRounds = 10;
-  
+
 
 /* -------------------------------------------------------------------------- */    
 /*                         //SECTION - Update user                            */
@@ -55,7 +55,7 @@ router.put('/update/:id', validateUpdate, handleValidationErrors, async (req, re
             }
 
             // update the users password to the database
-            User.updateOne({ _id: req.params.id }, 
+            User.findByIdAndUpdate(req.params.id, 
             { password: hash }).then(result => {
                 if (result.matchedCount = 0) {
                     return res.status(404).send({
