@@ -10,11 +10,12 @@
             <div class="cssmenu">
                 <ul>
                     <% if (user) { %>
-                        <li><a href="/account.ejs">My Account</a></li> 
+                        <li><a href="/cart">Cart</a></li> 
+                        <li><a href="/account">My Account</a></li> 
                         <li><button style="border: none; outline: none; background-color: #fff;"><a id="logout-btn">Logout</a></button></li> 
                     <% } else { %>
-                        <li><a href="/login.ejs">Login</a></li> 
-                        <li><a href="/signup.ejs">Sign up </a></li>
+                        <li><a href="/login">Login</a></li> 
+                        <li><a href="/signup">Sign up </a></li>
                     <% } %>
                 </ul>
             </div>
