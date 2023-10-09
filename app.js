@@ -11,6 +11,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const viewRouter = require('./routes/index');
 const userRouter = require('./routes/user/');
 const productRouter = require('./routes/product');
+const webhookRouter = require('./routes/webhook');
 
 const mongoUri = process.env.MONGODB_URI;
 
@@ -49,6 +50,9 @@ app.use(function(req, res, next) {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
+// Moved above express.json() because request needs to be raw, not parsed.
+app.use('/', webhookRouter);
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -67,7 +71,7 @@ app.use(function(req, res, next) {
     next(createError(404));
 });
 
-
+webhookRouter
 
 // error handler
 app.use(function(err, req, res, next) {
