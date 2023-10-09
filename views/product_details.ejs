@@ -35,6 +35,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			<!-- end product_slider -->
 			</div>
 			<div class="cont1 span_2_of_a1">
+                <p id="id" hidden><%= product.id %></p>
+
 				<h3 class="m_3"><%= product.title %></h3>
 				
 				<div class="price_single">
@@ -57,7 +59,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <fieldset>
                             <% option.values.forEach(function(value){ %>
                                 <li>
-                                    <input type="radio" name="colour" id="<%= option.title %>">
+                                    <input type="radio" name="<%= option.name %>" id="<%= option.title %>">
                                     <% if(value.colors) { %>
                                         <svg width="20" height="20">
                                             <rect width="20" height="20" style="fill:<%= value.colors[0] %>;stroke-width:3;stroke:rgb(0,0,0)" />
@@ -71,10 +73,14 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <br>
                     </ul>
 
-                <% }); %>           
+                <% }); %>    
+                
+				<h4 class="m_9">Quantity</h3>
+                <input type="number" name="quantity" id="quantity" min="1" value="1">
+
 
 				<ul class="add-to-links">
-    			   <li><button type="button" class="add_to_cart_btn">Add to Cart</button></li>
+    			   <li><button type="button" id="add_to_cart" class="add_to_cart_btn">Add to Cart</button></li>
     			   <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li>
     			</ul>
     			
@@ -97,5 +103,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"></span></a>
 		<%- include('partials/navigation.ejs'); %>
 		<%- include('partials/footer.ejs'); %>
+
+        <script src="/product.js"></script>
 </body>
 </html>
