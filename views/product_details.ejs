@@ -18,71 +18,73 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 		   <div class="clear"></div>
      	</div>
-       </div>
-       <div class="single">
-         <div class="wrap">
+        </div>
+        <div class="single">
+            <div class="wrap">
 		<div class="cont span_2_of_3">
 			  <div class="labout span_1_of_a1">
 				<!-- start product_slider -->
-				     <ul id="etalage">
-							<li>
-								<a href="optionallink.html">
-									<img class="etalage_thumb_image" src="images/t1.jpg" />
-								</a>
-							</li>
-						</ul>
-					
+                <!-- <ul id="etalage">
+                    <li>
+                        <a href="optionallink.html">
+                            <img class="etalage_thumb_image" src="<%= product.images[0].src %>" />
+                        </a>
+                    </li>
+                </ul> -->
+                <img class="etalage_thumb_image" src="<%= product.images[0].src %>" />
 			<!-- end product_slider -->
 			</div>
 			<div class="cont1 span_2_of_a1">
-				<h3 class="m_3">Lorem ipsum dolor sit amet</h3>
+				<h3 class="m_3"><%= product.title %></h3>
 				
 				<div class="price_single">
-							  <span class="reducedfrom">$66.00</span>
-							  <span class="actual">$12.00</span><a href="#">click for offer</a>
-							</div>
-				<ul class="options">
-					<h4 class="m_9">Select a Size</h4>
-					<li><a href="#">S</a></li>
-					<li><a href="#">M</a></li>
-					<li><a href="#">L</a></li>
-					<li><a href="#">XL</a></li>
-					<div class="clear"></div>
-				</ul>
-				<div class="btn_form">
-				   <form>
-					 <input type="submit" value="buy now" title="">
-				  </form>
-				</div>
-				<ul class="add-to-links">
-    			   <li><img src="images/wish.png" alt=""/><a href="#">Add to wishlist</a></li>
-    			</ul>
-				<%- include('partials/rating.ejs'); %>
-    			<p class="m_desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-    			
-                <div class="social_single">	
-				   <ul>	
-					  <li class="fb"><a href="#"><span> </span></a></li>
-					  <li class="tw"><a href="#"><span> </span></a></li>
-					  <li class="g_plus"><a href="#"><span> </span></a></li>
-					  <li class="rss"><a href="#"><span> </span></a></li>		
-				   </ul>
-			    </div>
-			</div>
-			<div class="clear"></div>
-     
-     
-         <ul id="flexiselDemo3">
-			<li><img src="images/pic11.jpg" /><div class="grid-flex"><a href="#">Bloch</a><p>Rs 850</p></div></li>
-			<li><img src="images/pic10.jpg" /><div class="grid-flex"><a href="#">Capzio</a><p>Rs 850</p></div></li>
-			<li><img src="images/pic9.jpg" /><div class="grid-flex"><a href="#">Zumba</a><p>Rs 850</p></div></li>
-			<li><img src="images/pic8.jpg" /><div class="grid-flex"><a href="#">Bloch</a><p>Rs 850</p></div></li>
-			<li><img src="images/pic7.jpg" /><div class="grid-flex"><a href="#">Capzio</a><p>Rs 850</p></div></li>
-		 </ul>
+                    <span class="actual"><%= Intl.NumberFormat('en-NZ', { style: 'currency', currency: 'NZD' }).format(product.variants[0].price / 100) %></span>
+                </div>
 
+                <div>
+                    <%- include('partials/rating.ejs'); %>
+                </div>
+
+                <p class="m_desc"><%=product.tags.join(', ')%></p>
+                <br>
+
+                <% product.options.forEach(function(option){ %>
+
+
+                    <ul class="options">
+                        <h4 class="m_9">Select a <%= option.name %></h4>
+                        
+                        <fieldset>
+                            <% option.values.forEach(function(value){ %>
+                                <li>
+                                    <input type="radio" name="colour" id="<%= option.title %>">
+                                    <% if(value.colors) { %>
+                                        <svg width="20" height="20">
+                                            <rect width="20" height="20" style="fill:<%= value.colors[0] %>;stroke-width:3;stroke:rgb(0,0,0)" />
+                                        </svg>
+                                    <% }; %>
+                                    <label for="<%= value.title %>"><%= value.title %></label>
+                                </li>
+                            <% }); %>
+                        </fieldset>
+                        <br>
+                        <br>
+                    </ul>
+
+                <% }); %>           
+
+				<ul class="add-to-links">
+    			   <li><button type="button" class="add_to_cart_btn">Add to Cart</button></li>
+    			   <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li>
+    			</ul>
+    			
+
+			</div>
+			<div class="clear"></div>   
+     
 	 <div class="toogle">
      	<h3 class="m_3">Product Details</h3>
-     	<p class="m_text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>
+     	<p class="m_text"><%= product.description %></p>
      </div>					
 		<div class="toogle">
 		<h3 class="m_3">Product Reviews</h3>
