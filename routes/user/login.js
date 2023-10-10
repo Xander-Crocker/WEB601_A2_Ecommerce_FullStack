@@ -9,18 +9,21 @@ const User = require('../../models/user')
 
 
 //SETUP - Import Middlewares
-const { validateLogin, handleValidationErrors } = require('../../middlewares/validation');
+const { loginSchema, handleValidationErrors, validate } = require('../../middlewares/validation');
+const { matchedData, checkSchema } = require('express-validator');
 
 
 /* -------------------------------------------------------------------------- */
 /*                          //SECTION - LogIn                                 */
 /* -------------------------------------------------------------------------- */
-router.post('/login', validateLogin, handleValidationErrors, async (req, res, next) => { 
+router.post('/login', validate(checkSchema(loginSchema)), handleValidationErrors, async (req, res, next) => { 
     try{
+        const data = matchedData(req);
+
         const {
             username,
             password
-        } = req.body;
+        } = data;
 
         // Find the user in the database based on username input
         const user = await User.findOne({username: username});

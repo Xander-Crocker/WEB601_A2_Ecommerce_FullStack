@@ -6,7 +6,6 @@ const axios = require('axios').default;
 router.get('/', async function(req, res, next) {
     let products = await axios.get('http://localhost:443/api/product/all');
     res.render('index', { products: products.data.data });
-    console.log(req.session)
 });
 
 /* GET login page. */
