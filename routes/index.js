@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios').default;
+base_url = process.env.SERVER_URL;
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-    let products = await axios.get('http://localhost:443/api/product/all');
+    let products = await axios.get(base_url.concat('api/product/all'));
     res.render('index', { products: products.data.data });
 });
 
@@ -20,20 +21,21 @@ router.get('/signup', function(req, res, next) {
 
 /* GET user account page. */
 router.get('/account', async function(req, res, next) {
-    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
+    let user = await axios.get(base_url.concat('api/user/one/'.concat(req.session.user._id)));
     res.render('account', { title: 'Account', user: user.data });
 });
 
 /* GET product details page. */
 router.get('/product/:id', async function(req, res, next) {
-    let product = await axios.get('http://localhost:443/api/product/one/'.concat(req.params.id));
+    let product = await axios.get(base_url.concat('api/product/one/'.concat(req.params.id)));
     // console.log(product);
     res.render('product_details', { title: 'Product Details', product: product.data, rating: 4 });
 });
 
 /* GET billing page. */
-router.get('/cart', function(req, res, next) {
-    res.render('cart', { title: 'Cart' });
+router.get('/cart', async function(req, res, next) {
+    let product = await axios.get(base_url.concat('api/product/all/'.concat(req.params.id)));
+    res.render('cart', { title: 'Cart', product: product.data });
 });
 
 /* GET success page. */
