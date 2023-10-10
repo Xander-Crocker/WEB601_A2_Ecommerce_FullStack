@@ -16,7 +16,7 @@ const axiosRequest = axios.create({
 /* -------------------------------------------------------------------------- */
 router.get('/all', async (req, res, next) => {
     try {
-        // Ensure there is a valid session and the user is properly authorised.
+        // Ensure there is a valid session and the user is properly authorized.
         const originIsTrusted = process.env.TRUSTED_ORIGINS.includes(req.hostname) || process.env.TRUSTED_ORIGINS.includes(req.ip);
         if (!originIsTrusted) {
             if (req.session.user) {

@@ -13,16 +13,16 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <body>
 	<%- include('partials/header.ejs'); %>
 	<%- include('partials/navigation.ejs'); %>
-   <div class="header-bottom">
-   	<div class="wrap">
+    <div class="header-bottom">
+    <div class="wrap">
 
-		   <div class="clear"></div>
-     	</div>
+            <div class="clear"></div>
+        </div>
         </div>
         <div class="single">
             <div class="wrap">
 		<div class="cont span_2_of_3">
-			  <div class="labout span_1_of_a1">
+			<div class="labout span_1_of_a1">
 				<!-- start product_slider -->
                 <!-- <ul id="etalage">
                     <li>
@@ -62,7 +62,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                     <input type="radio" name="<%= option.name %>" id="<%= option.title %>">
                                     <% if(value.colors) { %>
                                         <svg width="20" height="20">
-                                            <rect width="20" height="20" style="fill:<%= value.colors[0] %>;stroke-width:3;stroke:rgb(0,0,0)" />
+                                            <rect width="20" height="20" style="fill: <%= value.colors[0] %>;stroke-width:3;stroke:rgb(0,0,0)" />
                                         </svg>
                                     <% }; %>
                                     <label for="<%= value.title %>"><%= value.title %></label>
@@ -80,26 +80,25 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
 				<ul class="add-to-links">
-    			   <li><button type="button" id="add_to_cart" class="add_to_cart_btn">Add to Cart</button></li>
-    			   <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li>
-    			</ul>
-    			
+                    <li><button type="button" id="add_to_cart" class="add_to_cart_btn">Add to Cart</button></li> 
+                    <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li>
+                </ul>
 
 			</div>
 			<div class="clear"></div>   
-     
-	 <div class="toogle">
-     	<h3 class="m_3">Product Details</h3>
-     	<p class="m_text"><%= product.description %></p>
-     </div>					
+    
+	<div class="toogle">
+        <h3 class="m_3">Product Details</h3>
+        <p class="m_text"><%- product.description %></p>
+    </div>					
 		<div class="toogle">
 		<h3 class="m_3">Product Reviews</h3>
 		<p class="m_text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum.</p>
 		</div>
-     </div>
-     <div class="clear"></div>
-	 </div>
-     </div>
+    </div>
+        <div class="clear"></div>
+    </div>
+    </div>
         <a href="#" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"></span></a>
 		<%- include('partials/navigation.ejs'); %>
 		<%- include('partials/footer.ejs'); %>
