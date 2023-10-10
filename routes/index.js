@@ -34,8 +34,13 @@ router.get('/product/:id', async function(req, res, next) {
 
 /* GET billing page. */
 router.get('/cart', async function(req, res, next) {
-    let product = await axios.get(base_url.concat('api/product/all/'.concat(req.params.id)));
+    let product = await axios.get(base_url.concat('api/product/all/'));
     res.render('cart', { title: 'Cart', product: product.data });
+});
+
+router.post('/cart', async function(req, res, next) {
+    let product = await axios.get(base_url.concat('api/product/all/'));
+    res.render('cart', { title: 'Cart', product: product.data, cart: req.body.cart });
 });
 
 /* GET success page. */
