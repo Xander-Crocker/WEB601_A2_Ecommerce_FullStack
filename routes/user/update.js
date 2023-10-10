@@ -9,7 +9,8 @@ const User = require('../../models/user')
 
 
 //SETUP - Import Middlewares
-const { validateUpdate, handleValidationErrors } = require('../../middlewares/validation');
+const { updateSchema, handleValidationErrors, validate } = require('../../middlewares/validation');
+const { matchedData, checkSchema } = require('express-validator');
 
 
 //SETUP - Configure Middlewares
@@ -19,21 +20,17 @@ const saltRounds = 10;
 /* -------------------------------------------------------------------------- */    
 /*                         //SECTION - Update user                            */
 /* -------------------------------------------------------------------------- */
-router.put('/update/:id', validateUpdate, handleValidationErrors, async (req, res) => {
+router.put('/update/:id', validate(checkSchema(updateSchema)), handleValidationErrors, async (req, res) => {
     try {
-        // Extract data from the request body.
-        const {
-            password
-        } = req.body;
+        const data = matchedData(req);
         
-        // Extract data from the request parameters.
-        const {id} = req.params;
+        const { password } = data;
+        const { id } = req.params;
 
         // Check that the URL params are provided.
         if (id == ':id') {
             return res.status(400).json({ error: "No user ID provided."});
         }
-
 
         // Ensure there is a valid session and the user is properly authorised.
         if (req.session.user) {
