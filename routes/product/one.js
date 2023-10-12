@@ -6,9 +6,10 @@ const router = express.Router();
 //SETUP - Import Middlewares
 const { idOnlySchema, handleValidationErrors, validate } = require('../../middlewares/validation');
 const { matchedData, checkSchema } = require('express-validator');
-const authorizeRoles = require('../../middlewares/auth')
+const authorize = require('../../middlewares/auth')
 
 
+//SETUP - Configure Middlewares
 const axiosRequest = axios.create({
     baseURL: 'https://api.printify.com/v1', // Replace with your API's base URL
     headers: {
@@ -22,7 +23,7 @@ const axiosRequest = axios.create({
 /* -------------------------------------------------------------------------- */
 router.get(
     '/one/:id',
-    authorizeRoles(['admin']),
+    authorize(['admin']),
     validate(checkSchema(idOnlySchema)),
     handleValidationErrors,
     async (req, res, next) => {

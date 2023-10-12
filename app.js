@@ -11,6 +11,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const viewRouter = require('./routes/index');
 const userRouter = require('./routes/user/');
 const productRouter = require('./routes/product');
+const orderRouter = require('./routes/order');
 const webhookRouter = require('./routes/webhook');
 
 const mongoUri = process.env.MONGODB_URI;
@@ -65,6 +66,7 @@ app.use(express.static(path.join(__dirname, 'app')));
 app.use('/', viewRouter);
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
+app.use('/api/order', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

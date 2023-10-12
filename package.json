@@ -23,6 +23,7 @@
     "mongoose": "^7.5.3",
     "morgan": "~1.9.1",
     "stripe": "^13.8.0",
+    "uuid": "^9.0.1",
     "webkit": "^0.0.0"
   },
   "devDependencies": {
