@@ -94,7 +94,11 @@ License URL: http://creativecommons.org/licenses/by/3.0/
      </div>					
 		<div class="toogle">
 		<h3 class="m_3">Product Reviews</h3>
-		<p class="m_text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit</p>
+        <br>
+        <%- include('partials/review.ejs', {
+            user: 'John Doe',
+            comment: 'This product is swag yo!'
+        }); %>
 
         <h3>Leave a Review:</h3>
         <form action="/comment" role="form" method="POST" enctype="application/x-www-form-urlencoded">
@@ -102,6 +106,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
             <label for="comment" class="form-label">Comment:</label>
             <textarea name="comment" class="form-control" rows="3" required></textarea>
           </div>
+          <br>
           <button type="submit" class="btn btn-success">Submit</button>
         </form>
 		</div>
