@@ -20,9 +20,27 @@ router.get('/signup', function(req, res, next) {
 });
 
 /* GET user account page. */
-router.get('/account', async function(req, res, next) {
+router.get('/dashboard/account', async function(req, res, next) {
     let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
-    res.render('account', { title: 'Account', user: user.data });
+    res.render('dashboard/account', { title: 'Account', user: user.data });
+});
+
+/* GET user orders page. */
+router.get('/dashboard/orders', async function(req, res, next) {
+    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
+    res.render('dashboard/orders', { title: 'Orders', user: user.data });
+});
+
+/* GET user sales page. */
+router.get('/dashboard/sales', async function(req, res, next) {
+    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
+    res.render('dashboard/sales', { title: 'Sales', user: user.data });
+});
+
+/* GET users page. */
+router.get('/dashboard/users', async function(req, res, next) {
+    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
+    res.render('dashboard/users', { title: 'Users', user: user.data });
 });
 
 /* GET product details page. */
