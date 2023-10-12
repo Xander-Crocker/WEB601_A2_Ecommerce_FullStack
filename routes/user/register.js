@@ -26,8 +26,8 @@ router.post(
     handleValidationErrors,
     async (req, res, next) => {
         try {
+            // Extract data from the validated data.
             const data = matchedData(req);
-
             const {
                 username,
                 given_name,

@@ -43,15 +43,13 @@ router.post(
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 
-            let order = await axiosRequest.post(`/shops/${shop}/orders.json`, req.body.order)//data.order)
-
-            //FIXME - This will always eval to true since axios always returns a response object. 
-            if (order) {
-                return res.status(200).json(order.data);
-            } else {
+            let order = await axiosRequest.post(`/shops/${shop}/orders.json`, req.body.order).then((response) => {
+                console.log(response.data);
+                return res.status(200).json(response.data);
+            }).catch((error) => {
+                console.log(error);
                 return res.status(400).json({ error: "The order was unable to be created. Please try again."});
-            }
-
+            });
         } catch (error) {
             // If there's an error, respond with a server error.
             console.log(error);

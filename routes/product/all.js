@@ -29,7 +29,11 @@ router.get(
             const shop = process.env.SHOP_ID;
 
             // Retrieve all products from Printify.
-            let products = await axiosRequest.get(`/shops/${shop}/products.json`)
+            let products = await axiosRequest.get(`/shops/${shop}/products.json`).then((response) => {
+                return res.status(200).json(response.data);
+            }).catch((error) => {
+                return res.status(400).json({ error: "The products were unable to be retrieved. Please try again."});
+            });
 
             // If users evaluates to true then there are users.
             if (products.data) {
