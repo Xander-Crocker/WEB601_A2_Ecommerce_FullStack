@@ -35,15 +35,12 @@ router.get(
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 
-            // Retrieve all products from Printify.
-            let product = await axiosRequest.get(`/shops/${shop}/products/${id}.json`)
-
-            //FIXME - This will always eval to true since axios always returns a response object. 
-            if (product) {
-                return res.status(200).json(product.data);
-            } else {
-                return res.status(404).json({ error: "No product with provided ID exists."});
-            }
+            // Retrieve the product from Printify.
+            let product = await axiosRequest.get(`/shops/${shop}/products/${id}.json`).then((response) => {
+                return res.status(200).json(response.data);
+            }).catch((error) => {
+                return res.status(400).json({ error: "The product was unable to be retrieved. Please try again."});
+            });
         } catch (error) {
             // If there's an error, respond with a server error.
             return res.status(500).json({ error: "Something went wrong on our end. Please try again. "});

@@ -22,8 +22,8 @@ router.post(
     handleValidationErrors,
     async (req, res, next) => { 
         try{
+            // Extract data from the validated data.
             const data = matchedData(req);
-
             const {
                 username,
                 password
@@ -45,17 +45,13 @@ router.post(
                         // Create a session for the user upon successful login                    
                         req.session.user = { _id: user._id.toString(), role: user.role };
 
-                        
                         return res.status(200).json({
                             message: `User ${username} logged in successfully.`
                         });
                     } else {
                         return res.status(404).json({ error: 'Invalid username or password.' });
                     }
-
-
                 });
-
             } else {
                 return res.status(404).json({ error: 'Invalid username or password.' });
             }
