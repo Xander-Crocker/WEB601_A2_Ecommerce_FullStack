@@ -21,5 +21,7 @@ document.getElementById('login-btn').addEventListener('click', async() => {
     if (response.status === 200 && response.ok === true) {
         alert('Login successful.')
         window.location.replace('http://localhost:443')
+    } else {
+        alert('Login failed.')
     }
 })

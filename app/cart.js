@@ -1,9 +1,8 @@
 
-// Logout user (on click event)
 document.getElementById('cart-btn').addEventListener('click', async() => {
     // Get the cart object
     const cart = localStorage.getItem("cart");
-    console.log(cart);
+    // console.log(cart);
     // Send get request to logout endpoint
     const response = await fetch('/cart', {
         method: "POST",

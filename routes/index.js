@@ -54,8 +54,18 @@ router.get('/cart', async function(req, res, next) {
 });
 
 router.post('/cart', async function(req, res, next) {
-    let product = await axios.get(base_url.concat('api/product/all/'));
-    res.render('cart', { title: 'Cart', product: product.data, cart: req.body.cart });
+    let products = await axios.get(base_url.concat('api/product/all/'));
+    let cart = JSON.parse(req.body.cart);
+    let filteredProducts = products.data.data.filter(product => {
+        for (let i = 0; i < cart.length; i++) {
+            if (product.id === cart[i].id) {
+                product.quantity = cart[i].quantity;
+                return true;
+            }
+        }
+    });
+    
+    res.render('cart', { title: 'Cart', cart: filteredProducts});
 });
 
 /* GET success page. */
