@@ -6,11 +6,13 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
+const cors = require('cors');
 
 
 const viewRouter = require('./routes/index');
 const userRouter = require('./routes/user/');
 const productRouter = require('./routes/product');
+const orderRouter = require('./routes/order');
 const webhookRouter = require('./routes/webhook');
 
 const mongoUri = process.env.MONGODB_URI;
@@ -23,6 +25,16 @@ const store = new MongoDBStore({
     expires: 1000 * 60 * 60 * 72, // Session data will be stored for 3 days
 });
 
+
+const corsOptions = {
+    origin: '*', // allow requests from any origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // allow these HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // allow these headers
+    
+};
+
+app.use(cors(corsOptions));
+app.use(cors({ origin: true, credentials: true }));
 store.on('error', (err) => {
     console.error('MongoDB Session Store Error:', err);
 });
@@ -65,6 +77,7 @@ app.use(express.static(path.join(__dirname, 'app')));
 app.use('/', viewRouter);
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
+app.use('/api/order', orderRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
