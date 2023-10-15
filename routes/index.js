@@ -56,6 +56,38 @@ router.get('/cart', async function(req, res, next) {
 router.post('/cart', async function(req, res, next) {
     let products = await axios.get(base_url.concat('api/product/all/'));
     let cart = JSON.parse(req.body.cart);
+    // let validatedCart = []
+    // products.data.data.forEach(product => {
+    //     let id;
+    //     let size;
+    //     let colour;
+    //     let quantity;
+
+    //     for (let i = 0; i < cart.length; i++) {
+    //         if (product.id === cart[i].id) {
+    //             id = product.id;
+    //             quantity = cart[i].quantity;
+    //             let sizes = product.options.find(option => option.name === 'Sizes');
+    //             let colours = product.options.find(option => option.name === 'Colors');
+
+    //             size = sizes.values.filter(size => size.title === cart[i].size);
+    //             colour = colours.values.filter(colour => colour.title === cart[i].colour);
+    //         }
+    //     }
+
+    //     if (id) {
+    //         validatedCart.push({
+    //             id: id,
+    //             quantity: quantity,
+    //             size: size[0],
+    //             colour: colour[0]
+    //         });
+    //     }
+
+    // });
+
+    // console.log(validatedCart);
+
     let filteredProducts = products.data.data.filter(product => {
         for (let i = 0; i < cart.length; i++) {
             if (product.id === cart[i].id) {
@@ -64,7 +96,7 @@ router.post('/cart', async function(req, res, next) {
             }
         }
     });
-    
+    console.log(filteredProducts);
     res.render('cart', { title: 'Cart', cart: filteredProducts});
 });
 
@@ -74,3 +106,14 @@ router.get('/success', function(req, res, next) {
 });
 
 module.exports = router;
+
+
+
+// let filteredProducts = products.data.data.filter(product => {
+//     for (let i = 0; i < cart.length; i++) {
+//         if (product.id === cart[i].id) {
+//             product.quantity = cart[i].quantity;
+//             return true;
+//         }
+//     }
+// });

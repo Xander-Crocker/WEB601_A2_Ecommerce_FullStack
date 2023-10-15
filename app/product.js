@@ -2,6 +2,8 @@ function addToCart() {
     // Placeholder values (replace with actual values from your page)
     const productID = document.getElementById("id").innerText;
     const quantity = document.getElementById("quantity").value;
+    const colour = document.querySelector('input[name="Colors"]:checked').value;
+    const size = document.querySelector('input[name="Sizes"]:checked').value;
 
     // Get the current cart items from local storage or initialize an empty array
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -10,6 +12,8 @@ function addToCart() {
     const product = {
         id: productID,
         quantity: quantity,
+        colour: colour,
+        size: size
     };
 
     cart.push(product);
