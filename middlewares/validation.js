@@ -1,10 +1,9 @@
-const { body, validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 const User = require("../models/user");
 
 
 const registrationSchema = {
     username: {
-        in: ['body'],
         notEmpty: true,
         trim: true,
         isLength: {
@@ -28,7 +27,6 @@ const registrationSchema = {
         }
     },
     given_name: {
-        in: ['body'],
         notEmpty: true,
         isString: true,
         trim: true,
@@ -40,7 +38,6 @@ const registrationSchema = {
         errorMessage: "Given name must be provided"
     },
     family_name: {
-        in: ['body'],
         notEmpty: true,
         isString: true,
         trim: true,
@@ -53,7 +50,6 @@ const registrationSchema = {
         errorMessage: "Family name must be provided"
     },
     password: {
-        in: ['body'],
         trim: true,
         isStrongPassword:  {
             options: {
@@ -66,7 +62,6 @@ const registrationSchema = {
         errorMessage: "Password must be greater than 8 and contain at least one uppercase letter, one lowercase letter, and one number",
     },
     email: {
-        in: ['body'],
         trim: true,
         normalizeEmail: true,
         isEmail: { bail: true },
@@ -90,12 +85,10 @@ const registrationSchema = {
 
 const loginSchema = {
     username: {
-        in: ['body'],
         notEmpty: true,
         trim: true,
     },
     password: {
-        in: ['body'],
         notEmpty: true,
         trim: true,
     }
@@ -104,14 +97,27 @@ const loginSchema = {
 
 const updateSchema = {
     password: {
-        in: ['body'],
         notEmpty: true,
         trim: true,
     },
     id: {
-        in: ['param'],
-        notEmpty: true,
-        trim: true,
+        equals: {
+            options: [
+                ':id'
+            ],
+            negated: true
+        }
+    },
+}
+
+const idOnlySchema= {
+    id: {
+        equals: {
+            options: [
+                ':id'
+            ],
+            negated: true
+        }
     },
 }
 
@@ -149,6 +155,7 @@ module.exports = {
     registrationSchema,
     updateSchema,
     loginSchema,
+    idOnlySchema,
     handleValidationErrors,
     validate
 };
