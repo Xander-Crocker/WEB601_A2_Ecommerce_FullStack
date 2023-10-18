@@ -54,50 +54,58 @@ router.get('/cart', async function(req, res, next) {
 });
 
 router.post('/cart', async function(req, res, next) {
-    let products = await axios.get(base_url.concat('api/product/all/'));
-    let cart = JSON.parse(req.body.cart);
-    if (!cart || cart.length === 0) {
-        return res.status(400).json({ error: 'Cart is empty' });
-    }
-
-    // for each item in the cart
-    // I need to create the variant name from the cart options
-    // then I need to find the variant in the product
-    // then i need to add the variant id, image, and price to the cart item
-
-    let newCart = [];
-
-    for (let i = 0; i < cart.length; i++) {
-
-        let product = products.data.data.find(p => p.id === cart[i].id);
-        let optionKeys = Object.keys(cart[i].options)
-        console.log(optionKeys)
-        let variantName = String(`${cart[i][optionKeys[0]]} / ${cart[i][optionKeys[1]]}`);
-        console.log(variantName);
-        if (product) {
-            let variant = product.variants.find(v => v.title === variantName);
-
-            console.log(variantName, variant);
-            if (variant) {
-                let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
-
-                newCart.push({
-                    id: product.id,
-                    variantId: variant.id,
-                    name: product.name,
-                    variantName: variantName,
-                    price: variant.price,
-                    quantity: cart[i].quantity,
-                    size: cart[i].options[0],
-                    colour: cart[i].options[1],
-                    image: image
-                });
-            }
+    try {
+        //TODO - Extract logic to a internal processing route.
+        let products = await axios.get(base_url.concat('api/product/all/'));
+        let cart = JSON.parse(req.body.cart);
+        if (!cart || cart.length === 0) {
+            return res.status(400).json({ error: 'Cart is empty' });
         }
-    };
-
-    console.log(newCart);
-    res.render('cart', { title: 'Cart', cart: newCart });
+    
+        // for each item in the cart
+        // I need to create the variant name from the cart options
+        // then I need to find the variant in the product
+        // then i need to add the variant id, image, and price to the cart item
+    
+        let newCart = [];
+    
+        for (let i = 0; i < cart.length; i++) {
+    
+            let product = products.data.data.find(p => p.id === cart[i].id);
+            // console.log(cart[i]);
+    
+            let optionKeys = Object.keys(cart[i].options)
+            // console.log(optionKeys, optionKeys[0], optionKeys[1])
+    
+            let variantName = String(`${cart[i].options[optionKeys[0]]} / ${cart[i].options[optionKeys[1]]}`);
+            // console.log(variantName);
+    
+            if (product) {
+                let variant = product.variants.find(v => v.title === variantName);
+    
+                // console.log(variantName, variant);
+                if (variant) {
+                    let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
+    
+                    newCart.push({
+                        id: product.id,
+                        variantId: variant.id,
+                        title: product.title,
+                        variantName: variantName,
+                        price: variant.price,
+                        quantity: cart[i].quantity,
+                        image: image
+                    });
+                }
+            }
+        };
+    
+        console.log(newCart);
+        res.render('cart', { title: 'Cart', cart: newCart });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'An error occurred' });
+    }
 });
 
 

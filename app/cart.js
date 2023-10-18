@@ -12,8 +12,8 @@ document.getElementById('cart-btn').addEventListener('click', async() => {
         body: JSON.stringify({cart: cart})
     });
 
+    console.log(response);
     if (response.status !== 200) {
-        console.log(response);
         response.json().then(data => {
             if (data.error) {
                 alert(data.error);
