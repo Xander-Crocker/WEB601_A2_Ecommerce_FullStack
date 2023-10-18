@@ -2,9 +2,30 @@ function addToCart() {
     // Placeholder values (replace with actual values from your page)
     const productID = document.getElementById("id").innerText;
     const quantity = document.getElementById("quantity").value;
-    const colour = document.querySelector('input[name="Colors"]:checked').value;
-    const size = document.querySelector('input[name="Sizes"]:checked').value;
 
+    // Get all the radio buttons on the page
+    const radios = document.querySelectorAll('input[type="radio"]');
+
+    // Create an object to store the selected values
+    const selectedValues = {};
+
+    // Loop through each radio button
+    radios.forEach(radio => {
+        // Get the group name from the radio button's name attribute
+        const groupName = radio.name;
+
+        // Get the selected value if the radio button is checked
+        if (radio.checked) {
+            const selectedValue = radio.value;
+
+            // Add the selected value to the object using the group name as the property name
+            selectedValues[groupName] = selectedValue;
+        }
+    });
+
+
+
+    
     // Get the current cart items from local storage or initialize an empty array
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
@@ -12,9 +33,9 @@ function addToCart() {
     const product = {
         id: productID,
         quantity: quantity,
-        colour: colour,
-        size: size
+        options: selectedValues
     };
+    console.log(product);
 
     cart.push(product);
 

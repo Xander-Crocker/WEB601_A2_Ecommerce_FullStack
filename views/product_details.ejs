@@ -53,14 +53,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
                 <% product.options.forEach(function(option){ %>
 
-
                     <ul class="options">
-                        <h4 class="m_9">Select a <%= option.name %></h4>
+                        <h4 class="m_9"><%= option.name %></h4>
                         
                         <fieldset>
                             <% option.values.forEach(function(value){ %>
                                 <li>
-                                    <input type="radio" name="<%= option.name %>" id="<%= option.title %>">
+                                    <input type="radio" name="<%= option.name %>" id="<%= value.title %>" value="<%= value.title %>">
                                     <% if(value.colors) { %>
                                         <svg width="20" height="20">
                                             <rect width="20" height="20" style="fill: <%= value.colors[0] %> ;stroke-width:3;stroke:rgb(0,0,0)" />
@@ -82,7 +81,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 				<ul class="add-to-links">
                     <li><button type="button" id="add_to_cart" class="add_to_cart_btn">Add to Cart</button></li> 
-                    <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li>
+                    <!-- <li><button type="button" class="add_to_cart_btn">Add to Wishlist</button></li> -->
                 </ul>
 
 			</div>

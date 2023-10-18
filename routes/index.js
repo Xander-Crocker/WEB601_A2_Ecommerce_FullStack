@@ -56,49 +56,51 @@ router.get('/cart', async function(req, res, next) {
 router.post('/cart', async function(req, res, next) {
     let products = await axios.get(base_url.concat('api/product/all/'));
     let cart = JSON.parse(req.body.cart);
-    // let validatedCart = []
-    // products.data.data.forEach(product => {
-    //     let id;
-    //     let size;
-    //     let colour;
-    //     let quantity;
+    if (!cart || cart.length === 0) {
+        return res.status(400).json({ error: 'Cart is empty' });
+    }
 
-    //     for (let i = 0; i < cart.length; i++) {
-    //         if (product.id === cart[i].id) {
-    //             id = product.id;
-    //             quantity = cart[i].quantity;
-    //             let sizes = product.options.find(option => option.name === 'Sizes');
-    //             let colours = product.options.find(option => option.name === 'Colors');
+    // for each item in the cart
+    // I need to create the variant name from the cart options
+    // then I need to find the variant in the product
+    // then i need to add the variant id, image, and price to the cart item
 
-    //             size = sizes.values.filter(size => size.title === cart[i].size);
-    //             colour = colours.values.filter(colour => colour.title === cart[i].colour);
-    //         }
-    //     }
+    let newCart = [];
 
-    //     if (id) {
-    //         validatedCart.push({
-    //             id: id,
-    //             quantity: quantity,
-    //             size: size[0],
-    //             colour: colour[0]
-    //         });
-    //     }
+    for (let i = 0; i < cart.length; i++) {
 
-    // });
+        let product = products.data.data.find(p => p.id === cart[i].id);
+        let optionKeys = Object.keys(cart[i].options)
+        console.log(optionKeys)
+        let variantName = String(`${cart[i][optionKeys[0]]} / ${cart[i][optionKeys[1]]}`);
+        console.log(variantName);
+        if (product) {
+            let variant = product.variants.find(v => v.title === variantName);
 
-    // console.log(validatedCart);
+            console.log(variantName, variant);
+            if (variant) {
+                let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
 
-    let filteredProducts = products.data.data.filter(product => {
-        for (let i = 0; i < cart.length; i++) {
-            if (product.id === cart[i].id) {
-                product.quantity = cart[i].quantity;
-                return true;
+                newCart.push({
+                    id: product.id,
+                    variantId: variant.id,
+                    name: product.name,
+                    variantName: variantName,
+                    price: variant.price,
+                    quantity: cart[i].quantity,
+                    size: cart[i].options[0],
+                    colour: cart[i].options[1],
+                    image: image
+                });
             }
         }
-    });
-    console.log(filteredProducts);
-    res.render('cart', { title: 'Cart', cart: filteredProducts});
+    };
+
+    console.log(newCart);
+    res.render('cart', { title: 'Cart', cart: newCart });
 });
+
+
 
 /* GET success page. */
 router.get('/success', function(req, res, next) {
@@ -106,14 +108,3 @@ router.get('/success', function(req, res, next) {
 });
 
 module.exports = router;
-
-
-
-// let filteredProducts = products.data.data.filter(product => {
-//     for (let i = 0; i < cart.length; i++) {
-//         if (product.id === cart[i].id) {
-//             product.quantity = cart[i].quantity;
-//             return true;
-//         }
-//     }
-// });

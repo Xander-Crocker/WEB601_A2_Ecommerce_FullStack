@@ -4,12 +4,17 @@
 <div class="col-md-2 col-lg-2 col-xl-2">
     <img src="<%=  %>" class="img-fluid rounded-3" alt="Product Image">
 </div>
-
-<!-- Product details -->
-<div class="col-md-3 col-lg-3 col-xl-3">
-    <p class="lead fw-normal mb-2"><%= product.title%></p>
-    <p><span class="text-muted">Size: </span>M <br> <span class="text-muted">Color: </span>Grey</p>
-</div>
+<%= product %>
+    <!-- I want to display the key and the value for each key/value pair in options.  -->
+    <!-- Product details -->
+    <div class="col-md-3 col-lg-3 col-xl-3">
+        <p class="lead fw-normal mb-2"><%= product.title%></p>
+        <% product.options.keys().forEach(function(key){ %>
+            <p>
+                <span class="text-muted"><%= key %>: <%= product.options[key] %></span>
+            </p>
+        <% }); %>
+    </div>
 
 <!-- Quantity of product -->
 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -28,5 +33,3 @@
 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
     <h5 class="mb-0"><%=  %></h5>
 </div>
-
-<script src="/cart.js"></script>
