@@ -1,4 +1,4 @@
-function addToCart() {
+async function addToCart() {
     // Placeholder values (replace with actual values from your page)
     const productID = document.getElementById("id").innerText;
     const quantity = document.getElementById("quantity").value;
@@ -23,7 +23,10 @@ function addToCart() {
         }
     });
 
-
+    
+    const response = await fetch('/api/user/logout', {
+        method: "GET",
+    });
 
     
     // Get the current cart items from local storage or initialize an empty array

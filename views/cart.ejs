@@ -6,7 +6,7 @@
 	</head> 
 
 	<body>
-		<%- include('partials/header.ejs'); %>
+		<%- include('partials/nav.ejs'); %>
 
         <!-- ANCHOR Main Page Content - Cart -->
 		<section class="h-100" style="background-color: #eee;">
@@ -34,7 +34,7 @@
 						</div>
 
 						<div class="card">
-							<div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1" style="float:right; margin-top:20px; padding: 10px">
+							<div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1" style="float:right; margin-top:20px; padding:10px">
 								<h5 class="mb-0">Total: </h5> 
 								<h5 class="mb-0"><%=  %></h5>
 							</div>
@@ -62,7 +62,6 @@
 			</div>
 		</section>
 
-        <%- include('partials/navigation.ejs'); %>
 		<%- include('partials/footer.ejs'); %>
 
 	</body>

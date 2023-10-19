@@ -42,7 +42,8 @@ router.post(
                     }
 
                     if(result){
-                        // Create a session for the user upon successful login                    
+                        // Create a session for the user upon successful login.
+                        // Dont regenerate, to persist cart data through login.                
                         req.session.user = { _id: user._id.toString(), role: user.role };
 
                         return res.status(200).json({
