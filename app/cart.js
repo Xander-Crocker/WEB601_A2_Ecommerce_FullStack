@@ -1,22 +1,18 @@
-
-document.getElementById('cart-btn').addEventListener('click', async() => {
-    // Get the cart object
-    const cart = localStorage.getItem("cart");
-    // console.log(cart);
-    // Send get request to logout endpoint
-    const response = await fetch('/cart', {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json', // Set the content type to JSON
-        },
-        body: JSON.stringify({cart: cart})
+document.getElementById('pay_btn').addEventListener('click', async() => {
+   
+    await fetch('api/cart/create-checkout-session', {
+        method: 'GET'
+    }).then((response) => {
+        console.log(response);
+        if (response.status === 200) {
+            response.json().then((data) => {
+                window.location.href = data.url;
+            });
+        } else {
+            alert('Failed to create checkout session.');
+        }
+    }).catch((error) => {
+        console.error('Error:', error);
     });
 
-    document.open();
-    document.write(await response.text());
-    document.close();
-    
-    // Use pushState to modify the URL
-    const newURL = '/cart';
-    history.pushState({ path: newURL }, '', newURL);
-})
+});

@@ -1,11 +1,15 @@
 require("dotenv").config();
 const express = require('express');
 const router = express.Router();
+const axios = require('axios').default;
+const base_url = process.env.SERVER_URL;
 const stripe = require("stripe")(process.env.STRIPE_API_KEY);
 
-router.post("/create-checkout-session", async (req, res) => {
+router.get("/create-checkout-session", async (req, res) => {
     try {
-        console.log(req.body);
+        let response = await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart)));
+        let cart = response.data.cart;
+
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
@@ -55,12 +59,12 @@ router.post("/create-checkout-session", async (req, res) => {
                     },
                 },
             ],
-            line_items: req.body.items.map(item => {
+            line_items: cart.lineItems.map(item => {
                 return {
                     price_data: {
                         currency: "nzd",
                         product_data: {
-                            name: item.name,
+                            name: String(`${item.title} - ${item.variantName}`),
                             images: [item.image]
                         },
                         unit_amount: item.price,
