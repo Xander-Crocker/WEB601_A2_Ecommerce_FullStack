@@ -6,7 +6,7 @@ async function addToCart() {
     const radios = document.querySelectorAll('input[type="radio"]');
 
     // Create an object to store the selected values
-    const selectedValues = {};
+    const selectedValues = [];
 
     // Loop through each radio button
     radios.forEach(radio => {
@@ -18,7 +18,7 @@ async function addToCart() {
             const selectedValue = radio.value;
 
             // Add the selected value to the object using the group name as the property name
-            selectedValues[groupName] = selectedValue;
+            selectedValues.push(selectedValue);
         }
     });
 
@@ -40,7 +40,8 @@ async function addToCart() {
         referrerPolicy: "same-origin",
         body: JSON.stringify(data),
     }).then((response) => {
-        if (response.status === 201 && response.ok === true) {
+        console.log(response);
+        if (response.status === 201 || response.status === 200) {
             alert('Item added to the cart.');
         } else {
             alert('Failed to add item to cart.');

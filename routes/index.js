@@ -47,66 +47,66 @@ router.get('/product/:id', async function(req, res, next) {
     res.render('product_details', { title: 'Product Details', product: product.data, rating: 4 });
 });
 
-/* GET billing page. */
+/* GET cart page. */
 router.get('/cart', async function(req, res, next) {
-    let product = await axios.get(base_url.concat('api/product/all/'));
-    res.render('cart', { title: 'Cart', product: product.data });
+    let cart = await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart)));
+    res.render('cart', { title: 'Cart', cart: cart.data.cart });
 });
 
-router.post('/cart', async function(req, res, next) {
-    try {
-        //TODO - Extract logic to a internal processing route.
-        let products = await axios.get(base_url.concat('api/product/all/'));
-        let cart = JSON.parse(req.body.cart);
-        if (!cart || cart.length === 0) {
-            return res.status(400).json({ error: 'Cart is empty' });
-        }
+// router.post('/cart', async function(req, res, next) {
+//     try {
+//         //TODO - Extract logic to a internal processing route.
+//         let products = await axios.get(base_url.concat('api/product/all/'));
+//         let cart = JSON.parse(req.body.cart);
+//         if (!cart || cart.length === 0) {
+//             return res.status(400).json({ error: 'Cart is empty' });
+//         }
     
-        // for each item in the cart
-        // I need to create the variant name from the cart options
-        // then I need to find the variant in the product
-        // then i need to add the variant id, image, and price to the cart item
+//         // for each item in the cart
+//         // I need to create the variant name from the cart options
+//         // then I need to find the variant in the product
+//         // then i need to add the variant id, image, and price to the cart item
     
-        let newCart = [];
+//         let newCart = [];
     
-        for (let i = 0; i < cart.length; i++) {
+//         for (let i = 0; i < cart.length; i++) {
     
-            let product = products.data.data.find(p => p.id === cart[i].id);
-            // console.log(cart[i]);
+//             let product = products.data.data.find(p => p.id === cart[i].id);
+//             // console.log(cart[i]);
     
-            let optionKeys = Object.keys(cart[i].options)
-            // console.log(optionKeys, optionKeys[0], optionKeys[1])
+//             let optionKeys = Object.keys(cart[i].options)
+//             // console.log(optionKeys, optionKeys[0], optionKeys[1])
     
-            let variantName = String(`${cart[i].options[optionKeys[0]]} / ${cart[i].options[optionKeys[1]]}`);
-            // console.log(variantName);
+//             let variantName = String(`${cart[i].options[optionKeys[0]]} / ${cart[i].options[optionKeys[1]]}`);
+//             // console.log(variantName);
     
-            if (product) {
-                let variant = product.variants.find(v => v.title === variantName);
+//             if (product) {
+//                 let variant = product.variants.find(v => v.title === variantName);
     
-                // console.log(variantName, variant);
-                if (variant) {
-                    let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
+//                 // console.log(variantName, variant);
+//                 if (variant) {
+//                     let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
     
-                    newCart.push({
-                        id: product.id,
-                        variantId: variant.id,
-                        title: product.title,
-                        variantName: variantName,
-                        price: variant.price,
-                        quantity: cart[i].quantity,
-                        image: image
-                    });
-                }
-            }
-        };
+//                     newCart.push({
+//                         id: product.id,
+//                         variantId: variant.id,
+//                         title: product.title,
+//                         variantName: variantName,
+//                         price: variant.price,
+//                         quantity: cart[i].quantity,
+//                         image: image
+//                     });
+//                 }
+//             }
+//         };
     
-        console.log(newCart);
-        res.render('cart', { title: 'Cart', cart: newCart });
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: 'An error occurred' });
-    }
-});
+//         console.log(newCart);
+//         res.render('cart', { title: 'Cart', cart: newCart });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({ error: 'An error occurred' });
+//     }
+// });
 
 
 

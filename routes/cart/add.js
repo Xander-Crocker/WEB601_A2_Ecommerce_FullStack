@@ -2,9 +2,7 @@
 var express = require("express");
 var router = express.Router();
 const axios = require('axios').default;
-base_url = process.env.SERVER_URL;
-
-const Cart = require('../../models/cart');
+const base_url = process.env.SERVER_URL;
 
 //SETUP - Import Middlewares
 const { validate, handleValidationErrors, lineItemsSchema } = require("../../middlewares/validation");
@@ -58,7 +56,7 @@ router.post(
                         });
                     }
         
-                    console.log(req.session.cart);
+                    console.log(req.session);
                     // Check for an existing cart in session.
                     if (req.session.cart) {
                         await axios.get(base_url.concat('api/cart/one/').concat(req.session.cart)).then(async(response) => {
