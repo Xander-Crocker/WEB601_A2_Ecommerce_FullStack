@@ -1,0 +1,157 @@
+//SETUP - Modules
+var express = require("express");
+var router = express.Router();
+const axios = require('axios').default;
+base_url = process.env.SERVER_URL;
+
+const Cart = require('../../models/cart');
+
+//SETUP - Import Middlewares
+const { validate, handleValidationErrors, lineItemsSchema } = require("../../middlewares/validation");
+const { matchedData, checkSchema} = require("express-validator");
+
+
+/* -------------------------------------------------------------------------- */
+/*                          //SECTION - Add to Cart                           */
+/* -------------------------------------------------------------------------- */
+router.post(
+    "/add",
+    validate(checkSchema(lineItemsSchema)),
+    handleValidationErrors,
+    async (req, res, next) => {
+        try {
+            // Extract data from the validated data.
+            const data = matchedData(req);
+            // console.log(data);
+            
+            // Validate the product exists and get the variantId.
+            let lineItem;
+
+            await axios.get(base_url.concat('api/product/one/').concat(data.productId)).then(async (response) => {
+                if (response.status === 200 && response.statusText === 'OK') {
+                    let product = response.data;
+                    let options = data.options
+                    // console.log(options);
+                    // console.log(product.options);
+            
+                    let variantName = String(`${options[0]} / ${options[1]}`);
+                    // console.log(variantName);
+
+                    let variant = product.variants.find(v => v.title === variantName);
+        
+                    // console.log(variantName, variant);
+                    if (variant) {
+                        let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id)).src;
+
+                        lineItem = {
+                            productId: product.id,
+                            variantId: variant.id,
+                            title: product.title,
+                            variantName: variantName,
+                            price: variant.price,
+                            quantity: data.quantity,
+                            image: image
+                        }
+                    } else {
+                        return res.status(404).json({
+                            error: "Could not identify variant. Please try again.",
+                        });
+                    }
+        
+                    console.log(req.session.cart);
+                    // Check for an existing cart in session.
+                    if (req.session.cart) {
+                        await axios.get(base_url.concat('api/cart/one/').concat(req.session.cart)).then(async(response) => {
+                            if (response.status === 200 && response.statusText === 'OK') {
+                                let cart = response.data.cart;
+
+                                // check if any of the lineItems have the same productId as the one we're trying to add
+                                let existingLineItem = cart.lineItems.find(item => item.productId === lineItem.productId && item.variantId === lineItem.variantId);
+
+                                if (existingLineItem) {
+                                    // if so, update the quantity
+                                    existingLineItem.quantity += lineItem.quantity;
+                                    
+                                    if (existingLineItem.quantity <= 0) {
+                                        cart.lineItems = cart.lineItems.filter(item => item.productId !== lineItem.productId);
+                                    }
+                                } else {
+                                    // if not, add the lineItem to the cart
+                                    cart.lineItems.push(lineItem);
+                                }
+                                await axios.put(base_url.concat('api/cart/update/').concat(req.session.cart), cart).then(async(update) => {
+                                    if (update.status === 200 && update.statusText === 'OK') {
+                                        res.status(200).json({
+                                            message: "Cart updated successfully.",
+                                        });
+                                    } else {
+                                        return res.status(update.status).json({
+                                            error: update.error,
+                                        });
+                                    }
+                                }).catch((err) => {
+                                    console.log(err);
+                                    return res.status(500).json({
+                                        error: "Something went wrong on our end. Please try again. ",
+                                    });
+                                });
+                            } else {
+                                return res.status(404).json({
+                                    error: "Cart does not exist",
+                                });
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                            return res.status(500).json({
+                                error: "Something went wrong on our end. Please try again. ",
+                            });
+                        });
+                    } else {
+                        let cart = {
+                            lineItems : [lineItem]
+                        }
+                        if (req.session.user) {
+                            cart.userId= req.session.user._id;
+                        }
+                        axios.post(base_url.concat('api/cart/create/'), cart).then((response) => {
+                            if (response.status === 201 && response.statusText === 'Created') {
+                                req.session.cart = response.data.cart._id;
+
+                                return res.status(201).json({
+                                    message: "Cart created successfully, item added.",
+                                    cart: data.cart,
+                                });
+                            } else {
+                                return res.status(response.status).json({
+                                    error: response.error,
+                                });
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                            return res.status(500).json({
+                                error: "Something went wrong on our end. Please try again. ",
+                            });
+                        });
+                    }
+                } else {
+                    return res.status(404).json({
+                        error: "Product does not exist",
+                    });
+                }
+            }).catch((err) => {
+                console.log(err);
+                return res.status(500).json({
+                    error: "Something went wrong on our end. Please try again. ",
+                });
+            });
+        } catch (error) {
+            // If there's an error, respond with a server error.
+            console.log(error);
+            return res.status(500).json({
+                error: "Something went wrong on our end. Please try again. ",
+            });
+        }
+    }
+);
+
+module.exports = router;

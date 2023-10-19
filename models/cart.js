@@ -4,10 +4,22 @@ const lineItemSchema = new mongoose.Schema({
     productId: {
         type: String,
     },
+    title: {
+        type: String,
+    },
     variantId: {
+        type: Number,
+    },
+    variantName: {
         type: String,
     },
     quantity: {
+        type: Number,
+    },
+    image: {
+        type: String,
+    },
+    price: {
         type: Number,
     },
     _id: false
