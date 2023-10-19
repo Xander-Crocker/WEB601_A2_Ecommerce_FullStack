@@ -31,16 +31,23 @@ router.post(
                     let options = data.options
                     // console.log(options);
                     // console.log(product.options);
-            
-                    let variantName = String(`${options[0]} / ${options[1]}`);
+                    let variantName
+                    if (options.length === 1) {
+                        variantName = String(options[0]);
+                    } else {
+                        variantName = String(`${options[0]} / ${options[1]}`);
+                    }
                     // console.log(variantName);
 
                     let variant = product.variants.find(v => v.title === variantName);
         
                     // console.log(variantName, variant);
                     if (variant) {
-                        let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id)).src;
-
+                        let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
+                        if (!image) {
+                            image = product.images.find(image => image.is_default === true);
+                        }
+                        
                         lineItem = {
                             productId: product.id,
                             variantId: variant.id,
@@ -48,7 +55,7 @@ router.post(
                             variantName: variantName,
                             price: variant.price,
                             quantity: data.quantity,
-                            image: image
+                            image: image.src
                         }
                     } else {
                         return res.status(404).json({

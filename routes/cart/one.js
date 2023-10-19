@@ -22,7 +22,6 @@ router.get(
             const data = matchedData(req);
             
             await Cart.findById(data.id).then((cart) => {
-                console.log(cart);
                 if (!cart) {
                     return res.status(404).json({
                         error: "Cart does not exist",
