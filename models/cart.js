@@ -1,16 +1,16 @@
 const mongoose = require('mongoose')
 
 const lineItemSchema = new mongoose.Schema({
-    productId: {
+    product_id: {
         type: String,
     },
     title: {
         type: String,
     },
-    variantId: {
+    variant_id: {
         type: Number,
     },
-    variantName: {
+    variant_name: {
         type: String,
     },
     quantity: {
@@ -26,10 +26,10 @@ const lineItemSchema = new mongoose.Schema({
 })
 
 const cartSchema = new mongoose.Schema({
-    userId: {
+    user_id: {
         type: String,
     },
-    lineItems: [lineItemSchema],
+    line_items: [lineItemSchema],
     total: {
         type: Number,
     }

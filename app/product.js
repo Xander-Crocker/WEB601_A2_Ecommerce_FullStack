@@ -23,7 +23,7 @@ async function addToCart() {
     });
 
     let data = {
-        productId: productId,
+        product_id: productId,
         options: selectedValues,
         quantity: quantity,
     }

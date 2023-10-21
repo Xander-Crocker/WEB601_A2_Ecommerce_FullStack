@@ -25,7 +25,7 @@ router.post(
             // Validate the product exists and get the variantId.
             let lineItem;
 
-            await axios.get(base_url.concat('api/product/one/').concat(data.productId)).then(async (response) => {
+            await axios.get(base_url.concat('api/product/one/').concat(data.product_id)).then(async (response) => {
                 if (response.status === 200 && response.statusText === 'OK') {
                     let product = response.data;
                     let options = data.options
@@ -49,10 +49,10 @@ router.post(
                         }
                         
                         lineItem = {
-                            productId: product.id,
-                            variantId: variant.id,
+                            product_id: product.id,
+                            variant_id: variant.id,
                             title: product.title,
-                            variantName: variantName,
+                            variant_name: variantName,
                             price: variant.price,
                             quantity: data.quantity,
                             image: image.src
@@ -71,18 +71,18 @@ router.post(
                                 let cart = response.data.cart;
 
                                 // check if any of the lineItems have the same productId as the one we're trying to add
-                                let existingLineItem = cart.lineItems.find(item => item.productId === lineItem.productId && item.variantId === lineItem.variantId);
+                                let existingLineItem = cart.line_items.find(item => item.product_id === lineItem.product_id && item.variant_id === lineItem.variant_id);
 
                                 if (existingLineItem) {
                                     // if so, update the quantity
                                     existingLineItem.quantity += lineItem.quantity;
                                     
                                     if (existingLineItem.quantity <= 0) {
-                                        cart.lineItems = cart.lineItems.filter(item => item.productId !== lineItem.productId);
+                                        cart.line_items = cart.lineItems.filter(item => item.product_id !== line_item.product_id);
                                     }
                                 } else {
                                     // if not, add the lineItem to the cart
-                                    cart.lineItems.push(lineItem);
+                                    cart.line_items.push(lineItem);
                                 }
                                 await axios.put(base_url.concat('api/cart/update/').concat(req.session.cart), cart).then(async(update) => {
                                     if (update.status === 200 && update.statusText === 'OK') {
@@ -113,10 +113,10 @@ router.post(
                         });
                     } else {
                         let cart = {
-                            lineItems : [lineItem]
+                            line_items : [lineItem]
                         }
                         if (req.session.user) {
-                            cart.userId= req.session.user._id;
+                            cart.user_id= req.session.user._id;
                         }
                         axios.post(base_url.concat('api/cart/create/'), cart).then((response) => {
                             if (response.status === 201 && response.statusText === 'Created') {

@@ -30,11 +30,11 @@ router.post(
 
             // Create a new cart
             let cart = new Cart({
-                lineItems: data.lineItems,
+                line_items: data.lineItems,
             });
 
             if (req.session.user) {
-                cart.userId = req.session.user._id;
+                cart.user_id = req.session.user._id;
             }
 
             // Save the cart

@@ -127,12 +127,12 @@ const cartSchema = {
         isString: true,
         trim: true,
     },
-    userId: {
+    user_id: {
         optional: true,
         isString: true,
         trim: true,
     },
-    lineItems: {
+    line_items: {
         notEmpty: true,
         isArray: true,
         errorMessage: "Line items must be provided"
@@ -140,7 +140,7 @@ const cartSchema = {
 }
 
 const lineItemsSchema = {
-    productId: {
+    product_id: {
         notEmpty: true,
         isString: true,
     },

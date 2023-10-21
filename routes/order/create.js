@@ -2,7 +2,6 @@
 var express = require("express");
 var router = express.Router();
 const axios = require('axios').default;
-const { v4: uuidv4 } = require('uuid');
 
 
 //SETUP - Import Middlewares
@@ -33,19 +32,14 @@ router.post(
             // Extract data from the validated data.
             // const data = matchedData(req);
             // console.log(data);
-            console.log(req.body.order);
+            // console.log(req.body);
 
-            //TODO - move this uuid creation to webhook.
-            const newUUID = uuidv4();
-            
-            console.log(newUUID);
-            req.body.order.external_id = newUUID
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 
-            let order = await axiosRequest.post(`/shops/${shop}/orders.json`, req.body.order).then((response) => {
+            await axiosRequest.post(`/shops/${shop}/orders.json`, req.body).then((response) => {
                 console.log(response.data);
-                return res.status(200).json(response.data);
+                return res.status(201).json(response.data);
             }).catch((error) => {
                 console.log(error);
                 return res.status(400).json({ error: "The order was unable to be created. Please try again."});
