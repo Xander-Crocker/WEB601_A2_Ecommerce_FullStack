@@ -27,7 +27,7 @@ body{
 	background:#fff;
 }
 .wrap{
-	width:80%;
+	width:60%;
 	margin:0 auto;
 }
 .inner_wrap {
@@ -338,10 +338,11 @@ p.num{
 }
 .col_1_of_3:first-child {
 	margin-left: 0;
+  float: left;
 }
 .col_1_of_3 {
   float: right;
-  margin: 1% 3% 1% 3%;
+  margin: 1% 1% 1% 1%;
 }
 .bottomCard {
   width: 100%; 
@@ -412,6 +413,7 @@ p.m_2{
 /* Just for the demo */
 .top_box{
 	padding:6%;
+  height: 28em;
 }
 .list{
 	float: left;
@@ -2138,6 +2140,7 @@ p.cart a:hover {
 	}
 	.top_box {
 		padding: 10px;
+    height: auto;
 	}
 	.view-fifth .mask {
 		-webkit-transform: translateX(-391px);
@@ -2308,6 +2311,7 @@ p.cart a:hover {
 	}
 	.top_box {
 		padding: 10px;
+    height: auto;
 	}
 	.view-fifth .mask {
 		-webkit-transform: translateX(-391px);
@@ -2489,6 +2493,7 @@ p.cart a:hover {
 	}
 	.top_box {
 		padding: 10px;
+    height: auto;
 	}
 	.view-fifth .mask {
 		-webkit-transform: translateX(-391px);
@@ -2737,6 +2742,7 @@ p.cart a:hover {
 	}
 	.top_box {
 		padding: 10px;
+    height: auto;
 	}
 	.view-fifth .mask {
 		-webkit-transform: translateX(-391px);
@@ -3012,6 +3018,7 @@ p.cart a:hover {
 	}
 	.top_box {
 		padding: 10px;
+    height: auto;
 	}
 	.view-fifth .mask {
 		-webkit-transform: translateX(-391px);
