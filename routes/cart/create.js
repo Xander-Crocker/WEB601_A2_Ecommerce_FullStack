@@ -30,17 +30,16 @@ router.post(
 
             // Create a new cart
             let cart = new Cart({
-                line_items: data.lineItems,
+                line_items: data.line_items,
             });
 
-            if (req.session.user) {
-                cart.user_id = req.session.user._id;
+            if (data.user_id) {
+                cart.user_id = data.user_id;
             }
 
             // Save the cart
             await cart.save().then((cart) => {
-                req.session.cart = cart._id;
-
+                // req.session.cart = cart._id;
                 return res.status(201).json({
                     message: "Cart created successfully",
                     cart: cart,

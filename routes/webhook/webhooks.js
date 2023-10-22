@@ -31,20 +31,23 @@ router.post('/webhook', express.raw({type: 'application/json'}),async (req, res)
                         
                         let order = {};
                         order.line_items = cart.line_items;
-                        order.address_to = {}
+                        order.address_to = {};
                         order.address_to.country = data.shipping_details.address.country;
                         order.address_to.region = data.shipping_details.address.city;
                         order.address_to.city = data.shipping_details.address.city;
                         order.address_to.address1 = data.shipping_details.address.line1;
                         order.address_to.address2 = data.shipping_details.address.line2 || null;
                         order.address_to.zip = data.shipping_details.address.postal_code;
-                        order.address_to.phone = data.shipping_details.phone || null;
+                        order.address_to.phone = data.customer_details.phone || null;
                         order.address_to.first_name = data.customer_details.name.split(' ')[0]|| null;
                         order.address_to.last_name = data.customer_details.name.split(' ')[1] || null;
+                        order.address_to.email = data.customer_details.email || null;
                         order.shipping_method = 1;
                         order.external_id = uuidv4()
 
                         console.log('Order:', order);
+
+                        // find user by unique email and add user id to order
 
                         await axios.post(process.env.SERVER_URL.concat('api/order/create'), order).then((response) => {
                             console.log(response.data);
@@ -59,6 +62,19 @@ router.post('/webhook', express.raw({type: 'application/json'}),async (req, res)
                     } else {
                         console.log('Cart not found');
                     }
+
+                    await axios.delete(process.env.SERVER_URL.concat('api/cart/delete/').concat(cart_id)).then((response) => {
+                        console.log(response.data);
+                        if (response.status === 200) {
+                            console.log('Cart deleted successfully');
+                        } else {
+                            console.log('Cart not deleted');
+                        }
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+
+                    req.session.cart = null;
                 }).catch((error) => {
                     console.log(error);
                 });

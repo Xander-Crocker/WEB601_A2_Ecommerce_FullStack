@@ -8,7 +8,7 @@ const one = require('./one')
 const create = require('./create')
 const update = require('./update')
 const purchase = require('./purchase')
-// const cancel = require('./cancel')
+const cancel = require('./delete')
 
 
 router.use('/', add);
@@ -17,7 +17,7 @@ router.use('/', create);
 router.use('/', update);
 router.use('/', purchase);
 // router.use('/', update);
-// router.use('/', cancel);
+router.use('/', cancel);
 
 
 module.exports = router;

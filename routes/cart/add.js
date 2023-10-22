@@ -63,9 +63,10 @@ router.post(
                         });
                     }
         
-                    console.log(req.session);
+                    // console.log(req.session);
                     // Check for an existing cart in session.
                     if (req.session.cart) {
+                        console.log('Cart_id:', req.session.cart);
                         await axios.get(base_url.concat('api/cart/one/').concat(req.session.cart)).then(async(response) => {
                             if (response.status === 200 && response.statusText === 'OK') {
                                 let cart = response.data.cart;
@@ -113,15 +114,18 @@ router.post(
                         });
                     } else {
                         let cart = {
-                            line_items : [lineItem]
+                            line_items : []
                         }
+                        cart.line_items.push(lineItem);
+
                         if (req.session.user) {
+                            console.log(req.session);
                             cart.user_id= req.session.user._id;
                         }
                         axios.post(base_url.concat('api/cart/create/'), cart).then((response) => {
                             if (response.status === 201 && response.statusText === 'Created') {
                                 req.session.cart = response.data.cart._id;
-
+                                console.log(cart, data.cart);
                                 return res.status(201).json({
                                     message: "Cart created successfully, item added.",
                                     cart: data.cart,
