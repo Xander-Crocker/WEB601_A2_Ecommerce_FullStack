@@ -2,12 +2,14 @@
 var express = require("express");
 var router = express.Router();
 const axios = require('axios').default;
+const base_url = process.env.SERVER_URL;
 
 
 //SETUP - Import Middlewares
 const { validate, handleValidationErrors } = require("../../middlewares/validation");
 const { matchedData, checkSchema } = require("express-validator");
-const authorise = require('../../middlewares/auth')
+const authorise = require('../../middlewares/auth');
+const { log } = require("console");
 
 //SETUP - Configure Middlewares
 const axiosRequest = axios.create({
@@ -28,19 +30,59 @@ router.get(
     // handleValidationErrors,
     async (req, res, next) => {
         try {
-            //TODO - Add email query param to filter orders by email for customers.
-            //TODO - create a validation schema for this route.
-            // Extract data from the validated data.
-            // const data = matchedData(req);
-            // console.log(data);
-            // console.log(req.body);
-
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 
-            await axiosRequest.get(`/shops/${shop}/orders.json`).then((response) => {
-                console.log(response.data);
-                return res.status(200).json(response.data);
+            let orders = [];
+
+            await axiosRequest.get(`/shops/${shop}/orders.json`).then(async (response) => {
+                orders = response.data.data;
+
+                // console.log(response.data);
+                console.log(orders);
+
+
+                if(orders.length === 0) {
+                    return res.status(404).json({ error: "No orders found."});
+                }
+                // if there is a next_page_url, get the next page of orders.
+                for (let i = response.data.current_page; i < response.data.last_page; i++) {
+                    await axiosRequest.get(`/shops/${shop}/orders.json${response.data.next_page_url}`).then((response) => {
+                        console.log(response.data.data);
+                        orders = orders.concat(response.data.data);
+                    }).catch((error) => {
+                        console.log(error);
+                        return res.status(400).json({ error: "Unable to retrieve orders. Please try again."});
+                    });
+                }
+
+
+
+                // If user is a customer, filter orders by email.
+                if (req.session.user.role === 'customer') {
+                    await axios.get(base_url.concat('api/user/one/').concat(req.session.user._id)).then((response) => {
+                        if (response.status === 200 && response.statusText === 'OK') {
+                            let user = response.data;
+                            orders = orders.filter(order => {
+                                if (order.address_to.email === null) {
+                                    return false;
+                                }
+                                return order.address_to.email.toLowerCase() === user.email.toLowerCase()
+                            });
+                            
+                            if(orders.length === 0) {
+                                return res.status(404).json({ error: "No orders found."});
+                            } else {
+                                return res.status(200).json({ orders });
+                            }
+                        }
+                    }).catch((error) => {
+                        console.log(error);
+                        return res.status(400).json({ error: "Unable to retrieve orders. Please try again."});
+                    });
+                } else {
+                    return res.status(200).json({ orders });
+                }
             }).catch((error) => {
                 console.log(error);
                 return res.status(400).json({ error: "Unable to retrieve orders. Please try again."});
