@@ -49,6 +49,10 @@ router.get('/product/:id', async function(req, res, next) {
 
 /* GET cart page. */
 router.get('/cart', async function(req, res, next) {
+    if (!req.session.cart) {
+        res.render('cart', { title: 'Cart', cart: {} });
+    }
+    
     await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart))).then((cart) => {
         // console.log(cart.data.cart);
         if (cart.data.cart.length === 0 || !cart.data.cart) {

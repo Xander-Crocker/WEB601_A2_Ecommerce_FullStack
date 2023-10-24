@@ -13,15 +13,16 @@ const { matchedData, checkSchema} = require("express-validator");
 /*                          //SECTION - Update Cart                           */
 /* -------------------------------------------------------------------------- */
 router.delete(
-    "/delete/:id",
-    validate(checkSchema(idOnlySchema)),
-    handleValidationErrors,
+    "/delete",
+    // validate(checkSchema(idOnlySchema)),
+    // handleValidationErrors,
     async (req, res, next) => {
         try {
             // Extract data from the validated data.
-            const data = matchedData(req);
+            // const data = matchedData(req);
             
-            await Cart.findByIdAndDelete(data.id).then((response) => {
+            await Cart.findByIdAndDelete(req.session.cart).then((response) => {
+                req.session.cart = null;
                 res.status(200).json({
                     message: "Cart successfully deleted.",
                 });

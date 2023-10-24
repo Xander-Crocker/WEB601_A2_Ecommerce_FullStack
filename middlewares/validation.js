@@ -138,6 +138,18 @@ const cartSchema = {
         errorMessage: "Line items must be provided"
     },
 }
+const cartUpdateSchema = {
+    _id: {
+        notEmpty: true,
+        isString: true,
+        trim: true,
+    },
+    product_id: {
+        notEmpty: true,
+        isString: true,
+        trim: true,
+    },
+}
 
 const lineItemsSchema = {
     product_id: {
@@ -192,6 +204,7 @@ module.exports = {
     idOnlySchema,
     cartSchema,
     lineItemsSchema,
+    cartUpdateSchema,
     handleValidationErrors,
     validate
 };

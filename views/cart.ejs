@@ -17,6 +17,9 @@
 						<div class="d-flex justify-content-between align-items-center mb-4">
 							<h3 class="fw-normal mb-0 text-black">Shopping Cart</h3>
 						</div>
+                        <!-- Empty Cart -->
+                        <button class="btn btn-danger" id="empty_cart"><i class="fas fa-trash"></i></button>
+
                         <% if (Object.keys(cart).length === 0) { %>
                             <p>Cart is empty.</p>					
                         <% } else {%>  
