@@ -15,7 +15,7 @@
 				<body class="my-login-page">
 					<section class="h-100">
 						<div class="container h-100">
-							<div class="row justify-content-md-center h-100">
+							<div class="row justify-content h-100">
 								<div class="left-column">
 									<ul>
 									<a href = "/dashboard/account">Account</a>
@@ -32,6 +32,15 @@
 								</div>
 								<div class="vl"></div>
 								<div class="card-wrapper">
+                                    <% if (Object.keys(orders).length === 0) { %>
+                                        <p>You currently have no orders.</p>					
+                                    <% } else {%>  
+                                        <% orders.forEach(function(order){ %>
+
+                                            <%- include('../partials/dash_order.ejs', { order: order }) %>
+                        
+                                        <% }); %>   
+                                    <% } %>
 								</div>
 							</div>
 						</div>
