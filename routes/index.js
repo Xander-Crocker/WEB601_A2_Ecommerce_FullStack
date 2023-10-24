@@ -27,7 +27,19 @@ router.get('/dashboard/account', async function(req, res, next) {
 
 /* GET user orders page. */
 router.get('/dashboard/orders', async function(req, res, next) {
-    res.render('dashboard/orders', { title: 'Orders'});
+    try {
+        // console.log(req.session.user);
+        await axios.get(base_url.concat('api/order/all/'.concat(req.session.user._id))).then((response) => {
+            console.log(response.data);
+            res.render('dashboard/orders', { title: 'Orders', orders: response.data.orders });
+        }).catch((error) => {
+            console.log(error);
+            res.render('dashboard/orders', { title: 'Orders', orders: [] });
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('dashboard/orders', { title: 'Orders', orders: [] });
+    }
 });
 
 /* GET user sales page. */
@@ -60,62 +72,6 @@ router.get('/cart', async function(req, res, next) {
         res.render('cart', { title: 'Cart', cart: {} });
     });
 });
-
-// router.post('/cart', async function(req, res, next) {
-//     try {
-//         //TODO - Extract logic to a internal processing route.
-//         let products = await axios.get(base_url.concat('api/product/all/'));
-//         let cart = JSON.parse(req.body.cart);
-//         if (!cart || cart.length === 0) {
-//             return res.status(400).json({ error: 'Cart is empty' });
-//         }
-    
-//         // for each item in the cart
-//         // I need to create the variant name from the cart options
-//         // then I need to find the variant in the product
-//         // then i need to add the variant id, image, and price to the cart item
-    
-//         let newCart = [];
-    
-//         for (let i = 0; i < cart.length; i++) {
-    
-//             let product = products.data.data.find(p => p.id === cart[i].id);
-//             // console.log(cart[i]);
-    
-//             let optionKeys = Object.keys(cart[i].options)
-//             // console.log(optionKeys, optionKeys[0], optionKeys[1])
-    
-//             let variantName = String(`${cart[i].options[optionKeys[0]]} / ${cart[i].options[optionKeys[1]]}`);
-//             // console.log(variantName);
-    
-//             if (product) {
-//                 let variant = product.variants.find(v => v.title === variantName);
-    
-//                 // console.log(variantName, variant);
-//                 if (variant) {
-//                     let image = product.images.find(image => image.position === 'front' && image.variant_ids.includes(variant.id));
-    
-//                     newCart.push({
-//                         id: product.id,
-//                         variantId: variant.id,
-//                         title: product.title,
-//                         variantName: variantName,
-//                         price: variant.price,
-//                         quantity: cart[i].quantity,
-//                         image: image
-//                     });
-//                 }
-//             }
-//         };
-    
-//         console.log(newCart);
-//         res.render('cart', { title: 'Cart', cart: newCart });
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({ error: 'An error occurred' });
-//     }
-// });
-
 
 
 /* GET success page. */
