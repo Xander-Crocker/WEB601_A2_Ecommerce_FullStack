@@ -39,6 +39,13 @@ function authorize(roles) {
                     }
                 }
             }
+            if (req.baseUrl.includes('order') && id !== user._id.toString()) {
+                if (user.role !== 'admin') {
+                    return res.status(403).send({
+                        message: 'You are not authorised to perform this action.',
+                    });
+                }
+            }
     
             // If the request is PUT or DELETE, make sure the user only modifies itself.
             // if (req.method === 'PUT' || req.method === 'DELETE') {
