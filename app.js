@@ -13,6 +13,7 @@ const viewRouter = require('./routes/index');
 const userRouter = require('./routes/user/');
 const productRouter = require('./routes/product');
 const orderRouter = require('./routes/order');
+const cartRouter = require('./routes/cart');
 const webhookRouter = require('./routes/webhook');
 
 const mongoUri = process.env.MONGODB_URI;
@@ -78,13 +79,13 @@ app.use('/', viewRouter);
 app.use('/api/user', userRouter);
 app.use('/api/product', productRouter);
 app.use('/api/order', orderRouter);
+app.use('/api/cart', cartRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     next(createError(404));
 });
 
-webhookRouter
 
 // error handler
 app.use(function(err, req, res, next) {

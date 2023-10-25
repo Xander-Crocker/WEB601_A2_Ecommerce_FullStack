@@ -37,6 +37,7 @@ router.get(
 
             // Retrieve the product from Printify.
             await axiosRequest.get(`/shops/${shop}/products/${id}.json`).then((response) => {
+                // console.log(response);
                 return res.status(200).json(response.data);
             }).catch((error) => {
                 return res.status(400).json({ error: "The product was unable to be retrieved. Please try again."});

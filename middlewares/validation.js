@@ -121,6 +121,52 @@ const idOnlySchema= {
     },
 }
 
+const cartSchema = {
+    _id: {
+        optional: true,
+        isString: true,
+        trim: true,
+    },
+    user_id: {
+        optional: true,
+        isString: true,
+        trim: true,
+    },
+    line_items: {
+        notEmpty: true,
+        isArray: true,
+        errorMessage: "Line items must be provided"
+    },
+}
+const cartUpdateSchema = {
+    _id: {
+        notEmpty: true,
+        isString: true,
+        trim: true,
+    },
+    product_id: {
+        notEmpty: true,
+        isString: true,
+        trim: true,
+    },
+}
+
+const lineItemsSchema = {
+    product_id: {
+        notEmpty: true,
+        isString: true,
+    },
+    options: {
+        notEmpty: true,
+        isArray: true,
+    },
+    quantity: {
+        notEmpty: true,
+        isInt: true,
+    },
+}
+
+
 // Middleware function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
     const errors = validationResult(req);
@@ -156,6 +202,9 @@ module.exports = {
     updateSchema,
     loginSchema,
     idOnlySchema,
+    cartSchema,
+    lineItemsSchema,
+    cartUpdateSchema,
     handleValidationErrors,
     validate
 };

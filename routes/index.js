@@ -27,7 +27,19 @@ router.get('/dashboard/account', async function(req, res, next) {
 
 /* GET user orders page. */
 router.get('/dashboard/orders', async function(req, res, next) {
-    res.render('dashboard/orders', { title: 'Orders'});
+    try {
+        // console.log(req.session.user);
+        await axios.get(base_url.concat('api/order/all/'.concat(req.session.user._id))).then((response) => {
+            console.log(response.data);
+            res.render('dashboard/orders', { title: 'Orders', orders: response.data.orders });
+        }).catch((error) => {
+            console.log(error);
+            res.render('dashboard/orders', { title: 'Orders', orders: [] });
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('dashboard/orders', { title: 'Orders', orders: [] });
+    }
 });
 
 /* GET user sales page. */
@@ -47,58 +59,24 @@ router.get('/product/:id', async function(req, res, next) {
     res.render('product_details', { title: 'Product Details', product: product.data, rating: 4 });
 });
 
-/* GET billing page. */
+/* GET cart page. */
 router.get('/cart', async function(req, res, next) {
-    let product = await axios.get(base_url.concat('api/product/all/'));
-    res.render('cart', { title: 'Cart', product: product.data });
-});
-
-router.post('/cart', async function(req, res, next) {
-    let products = await axios.get(base_url.concat('api/product/all/'));
-    let cart = JSON.parse(req.body.cart);
-    // let validatedCart = []
-    // products.data.data.forEach(product => {
-    //     let id;
-    //     let size;
-    //     let colour;
-    //     let quantity;
-
-    //     for (let i = 0; i < cart.length; i++) {
-    //         if (product.id === cart[i].id) {
-    //             id = product.id;
-    //             quantity = cart[i].quantity;
-    //             let sizes = product.options.find(option => option.name === 'Sizes');
-    //             let colours = product.options.find(option => option.name === 'Colors');
-
-    //             size = sizes.values.filter(size => size.title === cart[i].size);
-    //             colour = colours.values.filter(colour => colour.title === cart[i].colour);
-    //         }
-    //     }
-
-    //     if (id) {
-    //         validatedCart.push({
-    //             id: id,
-    //             quantity: quantity,
-    //             size: size[0],
-    //             colour: colour[0]
-    //         });
-    //     }
-
-    // });
-
-    // console.log(validatedCart);
-
-    let filteredProducts = products.data.data.filter(product => {
-        for (let i = 0; i < cart.length; i++) {
-            if (product.id === cart[i].id) {
-                product.quantity = cart[i].quantity;
-                return true;
-            }
+    if (!req.session.cart) {
+        res.render('cart', { title: 'Cart', cart: {} });
+    }
+    
+    await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart))).then((cart) => {
+        // console.log(cart.data.cart);
+        if (cart.data.cart.length === 0 || !cart.data.cart) {
+            return res.status(400).json({ error: 'Cart is empty' });
         }
+        res.render('cart', { title: 'Cart', cart: cart.data.cart });
+    }).catch((error) => {
+        console.log(error);
+        res.render('cart', { title: 'Cart', cart: {} });
     });
-    console.log(filteredProducts);
-    res.render('cart', { title: 'Cart', cart: filteredProducts});
 });
+
 
 /* GET success page. */
 router.get('/success', function(req, res, next) {
@@ -106,14 +84,3 @@ router.get('/success', function(req, res, next) {
 });
 
 module.exports = router;
-
-
-
-// let filteredProducts = products.data.data.filter(product => {
-//     for (let i = 0; i < cart.length; i++) {
-//         if (product.id === cart[i].id) {
-//             product.quantity = cart[i].quantity;
-//             return true;
-//         }
-//     }
-// });
