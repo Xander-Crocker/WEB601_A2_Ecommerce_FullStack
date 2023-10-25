@@ -5,7 +5,7 @@ const axios = require('axios').default;
 
 
 //SETUP - Import Middlewares
-const { validate, handleValidationErrors } = require("../../middlewares/validation");
+const { validate, handleValidationErrors, orderSchema } = require("../../middlewares/validation");
 const { matchedData, checkSchema } = require("express-validator");
 const authorise = require('../../middlewares/auth')
 
@@ -24,22 +24,22 @@ const axiosRequest = axios.create({
 router.post(
     "/create",
     authorise(['admin', 'customer']),
-    // validate(checkSchema()),
-    // handleValidationErrors,
+    validate(checkSchema(orderSchema)),
+    handleValidationErrors,
     async (req, res, next) => {
         try {
             //TODO - create a validation schema for this route.
             // Extract data from the validated data.
-            // const data = matchedData(req);
+            const data = matchedData(req);
             // console.log(data);
             // console.log(req.body);
 
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 
-            await axiosRequest.post(`/shops/${shop}/orders.json`, req.body).then((response) => {
-                console.log(response.data);
-                return res.status(201).json(response.data);
+            await axiosRequest.post(`/shops/${shop}/orders.json`, data  ).then((response) => {
+                // console.log(response.data);
+                return res.status(201).json({message: "Order created successfully", order_id: response.data.id});
             }).catch((error) => {
                 console.log(error);
                 return res.status(400).json({ error: "The order was unable to be created. Please try again."});

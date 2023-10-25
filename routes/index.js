@@ -5,8 +5,17 @@ base_url = process.env.SERVER_URL;
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-    let products = await axios.get(base_url.concat('api/product/all'));
-    res.render('index', { products: products.data.data });
+    try {
+        await axios.get(base_url.concat('api/product/all')).then((response) => {
+            // console.log(response.data);
+            res.render('index', { products: response.data.data });
+        }).catch((error) => {
+            console.log(error);
+            res.render('index', { products: {} });
+        });
+    } catch (error) {
+        res.render('index', { products: {} });
+    }
 });
 
 /* GET login page. */
@@ -21,8 +30,17 @@ router.get('/signup', function(req, res, next) {
 
 /* GET user account page. */
 router.get('/dashboard/account', async function(req, res, next) {
-    let user = await axios.get(base_url.concat('api/user/one/'.concat(req.session.user._id)));
-    res.render('dashboard/account', { title: 'Account', user: user.data });
+    try {
+        await axios.get(base_url.concat('api/user/one/'.concat(req.session.user._id))).then((response) => {
+            // console.log(response.data);
+            res.render('dashboard/account', { title: 'Account', user: response.data });
+        }).catch((error) => {
+            console.log(error);
+            res.render('dashboard/account', { title: 'Account', user: {} });
+        });
+    } catch (error) {
+        res.render('index', { products: {} });
+    }
 });
 
 /* GET user orders page. */
@@ -54,27 +72,39 @@ router.get('/dashboard/users', async function(req, res, next) {
 
 /* GET product details page. */
 router.get('/product/:id', async function(req, res, next) {
-    let product = await axios.get(base_url.concat('api/product/one/'.concat(req.params.id)));
-    // console.log(product);
-    res.render('product_details', { title: 'Product Details', product: product.data, rating: 4 });
+    try {
+        await axios.get(base_url.concat('api/product/one/'.concat(req.params.id))).then((response) => {
+            // console.log(response.data);
+            res.render('product_details', { title: 'Product Details', product: response.data, rating: 5 });
+        }).catch((error) => {
+            console.log(error);
+            res.render('product_details', { title: 'Product Details', product: {}, rating: 5 });
+        });
+    } catch (error) {
+        res.render('product_details', { title: 'Product Details', product: {}, rating: 5 });
+    }
 });
 
 /* GET cart page. */
 router.get('/cart', async function(req, res, next) {
-    if (!req.session.cart) {
+    try {
+        if (!req.session.cart) {
+            res.render('cart', { title: 'Cart', cart: {} });
+        }
+        
+        await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart))).then((cart) => {
+            // console.log(cart.data.cart);
+            if (cart.data.cart.length === 0 || !cart.data.cart) {
+                return res.status(400).json({ error: 'Cart is empty' });
+            }
+            res.render('cart', { title: 'Cart', cart: cart.data.cart });
+        }).catch((error) => {
+            console.log(error);
+            res.render('cart', { title: 'Cart', cart: {} });
+        });
+    } catch (error) {
         res.render('cart', { title: 'Cart', cart: {} });
     }
-    
-    await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart))).then((cart) => {
-        // console.log(cart.data.cart);
-        if (cart.data.cart.length === 0 || !cart.data.cart) {
-            return res.status(400).json({ error: 'Cart is empty' });
-        }
-        res.render('cart', { title: 'Cart', cart: cart.data.cart });
-    }).catch((error) => {
-        console.log(error);
-        res.render('cart', { title: 'Cart', cart: {} });
-    });
 });
 
 

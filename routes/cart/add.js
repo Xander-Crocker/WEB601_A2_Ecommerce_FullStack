@@ -7,6 +7,7 @@ const base_url = process.env.SERVER_URL;
 //SETUP - Import Middlewares
 const { validate, handleValidationErrors, lineItemsSchema } = require("../../middlewares/validation");
 const { matchedData, checkSchema} = require("express-validator");
+const authorize = require('../../middlewares/auth')
 
 
 /* -------------------------------------------------------------------------- */
@@ -14,6 +15,7 @@ const { matchedData, checkSchema} = require("express-validator");
 /* -------------------------------------------------------------------------- */
 router.post(
     "/add",
+    authorize(['admin', 'customer']),
     validate(checkSchema(lineItemsSchema)),
     handleValidationErrors,
     async (req, res, next) => {

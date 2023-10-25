@@ -7,6 +7,7 @@ const Cart = require('../../models/cart');
 //SETUP - Import Middlewares
 const { validate, handleValidationErrors, idOnlySchema } = require("../../middlewares/validation");
 const { matchedData, checkSchema} = require("express-validator");
+const authorise = require('../../middlewares/auth')
 
 
 /* -------------------------------------------------------------------------- */
@@ -14,6 +15,7 @@ const { matchedData, checkSchema} = require("express-validator");
 /* -------------------------------------------------------------------------- */
 router.delete(
     "/delete",
+    authorise(['admin', 'customer']),
     // validate(checkSchema(idOnlySchema)),
     // handleValidationErrors,
     async (req, res, next) => {

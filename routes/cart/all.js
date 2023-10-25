@@ -11,32 +11,29 @@ const authorise = require('../../middlewares/auth')
 
 
 /* -------------------------------------------------------------------------- */
-/*                           //SECTION - Get a Cart                           */
+/*                         //SECTION - Get all Carts                          */
 /* -------------------------------------------------------------------------- */
 router.get(
-    "/one/:id",
+    "/all",
     authorise(['admin']),
-    validate(checkSchema(idOnlySchema)),
-    handleValidationErrors,
+    // validate(checkSchema(idOnlySchema)),
+    // handleValidationErrors,
     async (req, res, next) => {
-        try {
-            // Extract data from the validated data.
-            const data = matchedData(req);
-            
-            await Cart.findById(data.id).then((cart) => {
+        try {            
+            await Cart.find().then((cart) => {
                 if (!cart) {
                     return res.status(404).json({
-                        error: "Cart does not exist",
+                        error: "No carts found",
                     });
                 }
                 res.status(200).json({
-                    message: "Cart found",
+                    message: "Carts found",
                     cart: cart,
                 });
             }).catch((err) => {
                 console.log(err);
                 return res.status(404).json({
-                    error: "Cart does not exist",
+                    error: "No carts found",
                 });
             });
         } catch (error) {

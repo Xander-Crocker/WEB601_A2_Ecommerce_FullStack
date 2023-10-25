@@ -9,10 +9,9 @@ function authorize(roles) {
             if (!req.headers['user-agent'].startsWith('Postman')) {
                 // If the origin is trusted, skip authentication and authorisation.
                 if (originIsTrusted) {
-                    next();
+                    return next();
                 }
             }
-
             const user = req.session.user
             const id = req.params.id
     
@@ -22,7 +21,7 @@ function authorize(roles) {
                     message: 'You are currently not authenticated.',
                 });
             }
-    
+            
             // Check the request is authorised.
             if (!roles.includes(user.role)) {
                 return res.status(403).send({
@@ -51,8 +50,9 @@ function authorize(roles) {
             //     }
             // }
             
-            next();         
+            return next();         
         } catch (error) {
+            
             console.log(error);
             res.status(500).send({'error': 'Something went wrong on our end. Please try again.'});
         }

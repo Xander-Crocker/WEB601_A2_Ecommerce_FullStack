@@ -69,10 +69,10 @@ removeBtns.forEach((btn) => {
         const container = event.target.parentElement.parentElement;
 
         // get the product id from the id of the parent div
-        const product_id = container.parentElement.id;
+        const [product_id, variant_id] = container.parentElement.id.split('-')  ;
 
         // make a fetch request to update the quantity
-        await fetch(`/api/cart/update/${product_id}/quantity`,{
+        await fetch(`/api/cart/update/${product_id}/${variant_id}/quantity`,{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -101,11 +101,11 @@ quantityInputs.forEach((input) => {
         const container = event.target.parentElement;
 
         // get the product id from the id of the parent div
-        const product_id = container.parentElement.id;
+        const [product_id, variant_id] = container.parentElement.id.split('-')  ;
         const quantity = event.target.value;
 
         // make a fetch request to update the quantity
-        await fetch(`/api/cart/update/${product_id}/quantity`,{
+        await fetch(`/api/cart/update/${product_id}/${variant_id}/quantity`,{
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

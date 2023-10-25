@@ -1,5 +1,3 @@
-const e = require("express");
-
 // Delete user account (on click event)
 document.getElementById('delete-account').addEventListener('click', async() => {
     // Get user info from db 

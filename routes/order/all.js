@@ -31,8 +31,9 @@ router.get(
         try {
             // Extract data from the validated data.
             const data = matchedData(req);
+            console.log(req.session);
+            // reject request if a customer tries to modify another customer's order
 
-            console.log('id:', data.id);
             // Get shop id from .env
             const shop = process.env.SHOP_ID;
 

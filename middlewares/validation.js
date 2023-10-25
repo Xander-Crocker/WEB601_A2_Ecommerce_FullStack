@@ -166,6 +166,21 @@ const lineItemsSchema = {
     },
 }
 
+const orderSchema = {
+    line_items: {
+        notEmpty: true,
+        isArray: true,
+    },
+    shipping_method: {
+        notEmpty: true,
+        isInt: true,
+    },
+    address_to: {
+        notEmpty: true,
+        isObject: true,
+    },
+}
+
 
 // Middleware function to handle validation errors
 const handleValidationErrors = (req, res, next) => {
@@ -205,6 +220,7 @@ module.exports = {
     cartSchema,
     lineItemsSchema,
     cartUpdateSchema,
+    orderSchema,
     handleValidationErrors,
     validate
 };

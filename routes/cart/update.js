@@ -7,6 +7,7 @@ const Cart = require('../../models/cart');
 //SETUP - Import Middlewares
 const { validate, handleValidationErrors, cartSchema } = require("../../middlewares/validation");
 const { matchedData, checkSchema} = require("express-validator");
+const authorise = require('../../middlewares/auth')
 
 
 /* -------------------------------------------------------------------------- */
@@ -14,6 +15,7 @@ const { matchedData, checkSchema} = require("express-validator");
 /* -------------------------------------------------------------------------- */
 router.put(
     "/update/:id",
+    authorise(['internal']),
     validate(checkSchema(cartSchema)),
     handleValidationErrors,
     async (req, res, next) => {
@@ -43,6 +45,7 @@ router.put(
 
 router.put(
     "/update/:product_id/:variant_id/quantity",
+    authorise(['admin', 'customer']),
     // validate(checkSchema(cartUpdateSchema)),
     // handleValidationErrors,
     async (req, res, next) => {
