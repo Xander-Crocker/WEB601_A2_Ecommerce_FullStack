@@ -1,3 +1,4 @@
+const e = require("express");
 
 // Delete user account (on click event)
 document.getElementById('delete-account').addEventListener('click', async() => {
@@ -13,6 +14,8 @@ document.getElementById('delete-account').addEventListener('click', async() => {
         console.log(response);
         alert('Account deleted successfully.')
         window.location.replace('http://localhost:443')
+    } else {
+        alert('Account deletion failed.')
     }
 })   
 

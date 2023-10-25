@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios').default;
+base_url = process.env.SERVER_URL;
 
 /* GET home page. */
 router.get('/', async function(req, res, next) {
-    let products = await axios.get('http://localhost:443/api/product/all');
+    let products = await axios.get(base_url.concat('api/product/all'));
     res.render('index', { products: products.data.data });
-    console.log(req.session)
 });
 
 /* GET login page. */
@@ -20,22 +20,63 @@ router.get('/signup', function(req, res, next) {
 });
 
 /* GET user account page. */
-router.get('/account', async function(req, res, next) {
-    let user = await axios.get('http://localhost:443/api/user/one/'.concat(req.session.user._id));
-    res.render('account', { title: 'Account', user: user.data });
+router.get('/dashboard/account', async function(req, res, next) {
+    let user = await axios.get(base_url.concat('api/user/one/'.concat(req.session.user._id)));
+    res.render('dashboard/account', { title: 'Account', user: user.data });
+});
+
+/* GET user orders page. */
+router.get('/dashboard/orders', async function(req, res, next) {
+    try {
+        // console.log(req.session.user);
+        await axios.get(base_url.concat('api/order/all/'.concat(req.session.user._id))).then((response) => {
+            console.log(response.data);
+            res.render('dashboard/orders', { title: 'Orders', orders: response.data.orders });
+        }).catch((error) => {
+            console.log(error);
+            res.render('dashboard/orders', { title: 'Orders', orders: [] });
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('dashboard/orders', { title: 'Orders', orders: [] });
+    }
+});
+
+/* GET user sales page. */
+router.get('/dashboard/sales', async function(req, res, next) {
+    res.render('dashboard/sales', { title: 'Sales'});
+});
+
+/* GET users page. */
+router.get('/dashboard/users', async function(req, res, next) {
+    res.render('dashboard/users', { title: 'Users'});
 });
 
 /* GET product details page. */
 router.get('/product/:id', async function(req, res, next) {
-    let product = await axios.get('http://localhost:443/api/product/one/'.concat(req.params.id));
+    let product = await axios.get(base_url.concat('api/product/one/'.concat(req.params.id)));
     // console.log(product);
     res.render('product_details', { title: 'Product Details', product: product.data, rating: 4 });
 });
 
-/* GET billing page. */
-router.get('/cart', function(req, res, next) {
-    res.render('cart', { title: 'Cart' });
+/* GET cart page. */
+router.get('/cart', async function(req, res, next) {
+    if (!req.session.cart) {
+        res.render('cart', { title: 'Cart', cart: {} });
+    }
+    
+    await axios.get(base_url.concat('api/cart/one/'.concat(req.session.cart))).then((cart) => {
+        // console.log(cart.data.cart);
+        if (cart.data.cart.length === 0 || !cart.data.cart) {
+            return res.status(400).json({ error: 'Cart is empty' });
+        }
+        res.render('cart', { title: 'Cart', cart: cart.data.cart });
+    }).catch((error) => {
+        console.log(error);
+        res.render('cart', { title: 'Cart', cart: {} });
+    });
 });
+
 
 /* GET success page. */
 router.get('/success', function(req, res, next) {

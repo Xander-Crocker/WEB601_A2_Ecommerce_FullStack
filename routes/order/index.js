@@ -4,20 +4,18 @@ var router = express.Router();
 
 //SETUP - Import Routes
 const all = require('./all')
-const one = require('./one')
+// const one = require('./one')
+const create = require('./create')
 // const update = require('./update')
-// const deleteUser = require('./delete')
-// const login = require('./login')
-// const logout = require('./logout')
+// const cancel = require('./cancel')
 
 
 router.use('/', all);
-router.use('/', one);
+// router.use('/', one);
+router.use('/', create);
 // router.use('/', update);
 // router.use('/', update);
-// router.use('/', deleteUser);
-// router.use('/', login);
-// router.use('/', logout);
+// router.use('/', cancel);
 
 
 module.exports = router;

@@ -9,5 +9,7 @@ document.getElementById('logout-btn').addEventListener('click', async() => {
     if (response.status === 200 && response.ok === true) { 
         alert('Logout successful.')
         window.location.replace('http://localhost:443')
+    } else {
+        alert('Logout failed.')
     }
 })

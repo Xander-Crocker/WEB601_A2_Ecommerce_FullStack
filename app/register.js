@@ -26,5 +26,7 @@ document.getElementById('register-btn').addEventListener('click', async() => {
     if (response.status === 201 && response.ok === true) {
         alert('Registration successful.')
         window.location.replace('http://localhost:443')
+    } else {
+        alert('Registration failed.')
     }
 })
