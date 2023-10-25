@@ -8,7 +8,7 @@ const User = require('../../models/user')
 
 
 //SETUP - Import Middlewares
-const authorizeRoles = require('../../middlewares/auth')
+const authorize = require('../../middlewares/auth')
 
 
 /* -------------------------------------------------------------------------- */
@@ -16,7 +16,7 @@ const authorizeRoles = require('../../middlewares/auth')
 /* -------------------------------------------------------------------------- */
 router.get(
     '/all',
-    authorizeRoles(['admin']),
+    authorize(['admin']),
     async (req, res, next) => {
         try {
             // Retrieve all users from the database.
